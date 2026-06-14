@@ -1,7 +1,55 @@
 <!doctype html>
 <html lang="it">
   <head>
-    <!-- Meta Pixel Code -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="facebook-domain-verification"
+      content="df4fbds2vbo5duktoitr4mjuc84w66"
+    />
+
+    <!-- Iubenda: configurazione (deve stare prima di tutto) -->
+    <script>
+      var _iub = _iub || [];
+      _iub.csConfiguration = {
+        siteId: 4045593,
+        cookiePolicyId: 19298973,
+        lang: "it",
+        storage: { useSiteId: true },
+        callback: {
+          onConsentGiven: function () {
+            if (typeof fbq !== "undefined") {
+              fbq("consent", "grant");
+              fbq("init", "1068046574672461");
+              fbq("track", "PageView");
+            }
+          },
+          onConsentRejected: function () {
+            if (typeof fbq !== "undefined") {
+              fbq("consent", "revoke");
+            }
+          },
+        },
+      };
+    </script>
+
+    <!-- Iubenda: autoblocking (blocca i tracker prima del consenso) -->
+    <script src="https://cs.iubenda.com/autoblocking/4045593.js"></script>
+
+    <!-- Iubenda: TCF v2 + GPP stub (devono stare prima di iubenda_cs) -->
+    <script src="//cdn.iubenda.com/cs/tcf/stub-v2.js"></script>
+    <script src="//cdn.iubenda.com/cs/tcf/safe-tcf-v2.js"></script>
+    <script src="//cdn.iubenda.com/cs/gpp/stub.js"></script>
+
+    <!-- Iubenda: Cookie Solution (async, non blocca il render) -->
+    <script
+      src="//cdn.iubenda.com/cs/iubenda_cs.js"
+      charset="UTF-8"
+      async
+    ></script>
+
+    <!-- Meta Pixel: solo definizione della funzione fbq, NESSUN init/track -->
+    <!-- L'init e il PageView avvengono nel callback onConsentGiven di iubenda -->
     <script>
       !(function (f, b, e, v, n, t, s) {
         if (f.fbq) return;
@@ -26,89 +74,10 @@
         "script",
         "https://connect.facebook.net/en_US/fbevents.js",
       );
-      fbq("init", "1068046574672461");
-      fbq("track", "PageView");
-    </script>
-    <!-- End Meta Pixel Code -->
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="facebook-domain-verification"
-      content="df4fbds2vbo5duktoitr4mjuc84w66"
-    />
-    <link href="/src/App.css" rel="stylesheet" />
-
-    <!-- Iubenda -->
-    <script type="text/javascript">
-      var _iub = _iub || [];
-      _iub.csConfiguration = {
-        siteId: 4045593,
-        cookiePolicyId: 19298973,
-        lang: "it",
-        storage: { useSiteId: true },
-        callback: {
-          onConsentGiven: function () {
-            // Quando l'utente accetta, inizializza il pixel
-            if (typeof fbq !== "undefined") {
-              fbq("consent", "grant");
-              fbq("init", "1068046574672461");
-              fbq("track", "PageView");
-            }
-          },
-          onConsentRejected: function () {
-            // Quando l'utente rifiuta
-            if (typeof fbq !== "undefined") {
-              fbq("consent", "revoke");
-            }
-          },
-        },
-      };
+      // Solo revoca di default, prima del consenso
+      fbq("consent", "revoke");
     </script>
-    <script
-      type="text/javascript"
-      src="https://cs.iubenda.com/autoblocking/4045593.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="//cdn.iubenda.com/cs/tcf/stub-v2.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="//cdn.iubenda.com/cs/tcf/safe-tcf-v2.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="//cdn.iubenda.com/cs/gpp/stub.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="//cdn.iubenda.com/cs/iubenda_cs.js"
-      charset="UTF-8"
-      async
-    ></script>
-    <script
-      type="text/javascript"
-      src="https://cs.iubenda.com/autoblocking/4045593.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="//cdn.iubenda.com/cs/tcf/stub-v2.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="//cdn.iubenda.com/cs/tcf/safe-tcf-v2.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="//cdn.iubenda.com/cs/gpp/stub.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="//cdn.iubenda.com/cs/iubenda_cs.js"
-      charset="UTF-8"
-      async
-    ></script>
 
     <!-- Google Tag Manager -->
     <script>
@@ -123,48 +92,33 @@
         f.parentNode.insertBefore(j, f);
       })(window, document, "script", "dataLayer", "GTM-PBVP2WP8");
     </script>
-    <!-- End Google Tag Manager -->
   </head>
+
   <body>
     <!-- Google Tag Manager (noscript) -->
-    <noscript
-      ><iframe
+    <noscript>
+      <iframe
         src="https://www.googletagmanager.com/ns.html?id=GTM-PBVP2WP8"
         height="0"
         width="0"
         style="display: none; visibility: hidden"
-      ></iframe
-    ></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+      ></iframe>
+    </noscript>
 
-    <!-- Meta Pixel Code (noscript) -->
-    <noscript
-      ><img
+    <!-- Meta Pixel (noscript fallback) -->
+    <noscript>
+      <img
         height="1"
         width="1"
         style="display: none"
         src="https://www.facebook.com/tr?id=1068046574672461&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Meta Pixel Code (noscript) -->
+      />
+    </noscript>
 
     <div id="root"></div>
 
-    <!-- Iubenda Policy Links -->
-    <a
-      href="https://www.iubenda.com/privacy-policy/19298973"
-      class="iubenda-white iubenda-noiframe iubenda-embed iubenda-noiframe text-center flex justify-center"
-      title="Privacy Policy"
-      >Privacy Policy</a
-    >
-    <a
-      href="https://www.iubenda.com/privacy-policy/19298973/cookie-policy"
-      class="iubenda-white iubenda-noiframe iubenda-embed iubenda-noiframe text-center flex justify-center"
-      title="Cookie Policy"
-      >Cookie Policy</a
-    >
-
-    <!-- Iubenda Script -->
-    <script type="text/javascript">
+    <!-- Iubenda: loader per i link policy embed (una sola volta) -->
+    <script>
       (function (w, d) {
         var loader = function () {
           var s = d.createElement("script"),

@@ -1,18 +1,21 @@
 import React from "react";
+import IubendaLink from "./IubendaLink";
 
 function Footer() {
+  const legalLinkClass = "hover:text-red-600 transition-colors duration-200";
+
   return (
     <footer className="mt-auto bg-white border-t border-gray-200 py-8 px-4">
       <div className="max-w-6xl mx-auto flex flex-col items-center space-y-6">
-        {/* Logo Vicus */}
+        {/* Logo */}
         <a href="/" className="flex items-center space-x-2">
           <img
-            src="/logo-vicus.png" // Sostiture con il path corretto del tuo logo
+            src="/logo-vicus.png"
             alt="Vicus Logo"
             className="h-10 w-auto object-contain"
           />
-          {/* <span className="text-xl font-semibold text-gray-800">Vicus</span> */}
         </a>
+
         {/* Social */}
         <div className="text-center">
           <p className="font-semibold text-lg mb-4">Seguici sui social</p>
@@ -21,6 +24,7 @@ function Footer() {
               href="https://www.instagram.com/vicus_ita/"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Instagram Vicus"
               className="transition-transform duration-300 hover:scale-110 hover:opacity-70"
             >
               <img
@@ -29,24 +33,24 @@ function Footer() {
                 className="w-10 h-10 rounded-full object-cover"
               />
             </a>
-
             <a
               href="https://www.linkedin.com/company/vicus-ita/"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="LinkedIn Vicus"
               className="transition-transform duration-300 hover:scale-110 hover:opacity-70"
             >
               <img
                 src="https://images.seeklogo.com/logo-png/38/1/linkedin-black-icon-logo-png_seeklogo-387472.png"
-                alt="Linkedin"
+                alt="LinkedIn"
                 className="w-10 h-10 object-cover"
               />
             </a>
-
             <a
               href="https://www.facebook.com/profile.php?id=61575149767791"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Facebook Vicus"
               className="transition-transform duration-300 hover:scale-110 hover:opacity-70"
             >
               <img
@@ -59,42 +63,44 @@ function Footer() {
               href="https://www.tiktok.com/@vicus_ita/"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="TikTok Vicus"
               className="transition-transform duration-300 hover:scale-110 hover:opacity-70"
             >
               <img
                 src="https://img.magnific.com/premium-vector/art-illustration_1166422-332.jpg?semt=ais_hybrid&w=740&q=80"
-                alt="Facebook"
+                alt="TikTok"
                 className="w-10 h-10 rounded-full object-cover"
               />
             </a>
           </div>
         </div>
 
-        {/* Link */}
+        {/* Link interni */}
         <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-6 text-sm text-gray-600">
-          <a
-            href="/goals"
-            className="hover:text-red-600 transition-colors duration-200"
-          >
+          <a href="/goals" className={legalLinkClass}>
             Obiettivi
           </a>
-          <a
-            href="/workinprogress"
-            className="hover:text-red-600 transition-colors duration-200"
-          >
+          <a href="/workinprogress" className={legalLinkClass}>
             Blog
           </a>
-          <a
-            href="/#contact"
-            className="hover:text-red-600 transition-colors duration-200"
-          >
+          <a href="/#contact" className={legalLinkClass}>
             Hai bisogno di aiuto?
           </a>
         </div>
 
+        {/* Link legali iubenda */}
+        <nav
+          aria-label="Link legali"
+          className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-6 text-sm text-gray-600"
+        >
+          <IubendaLink type="privacy" className={legalLinkClass} />
+          <span className="hidden sm:inline text-gray-300">·</span>
+          <IubendaLink type="cookie" className={legalLinkClass} />
+        </nav>
+
         {/* Copyright */}
         <div className="text-center text-xs text-gray-500">
-          <p>© 2026 | Tutti i diritti riservati</p>
+          <p>© {new Date().getFullYear()} | Tutti i diritti riservati</p>
         </div>
       </div>
     </footer>
