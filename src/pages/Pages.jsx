@@ -8,6 +8,7 @@ import Work from "./Work";
 import Thanks from "./Thanks";
 import NavBar from "../components/NavBar";
 import Goals from "./Goals";
+import Iscrizione from "./Iscrizione";
 
 function Pages() {
   const contactRef = useRef(null);
@@ -24,6 +25,7 @@ function Pages() {
             <Route path="/thanks" element={<Thanks />} />
             <Route path="/workinprogress" element={<Work />} />
             <Route path="/goals" element={<Goals />} />
+            <Route path="/iscriviti" element={<Iscrizione />} />
           </Routes>
         </AnimatePresence>
       </>

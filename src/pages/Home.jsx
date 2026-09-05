@@ -114,7 +114,7 @@ function Home() {
             >
               <button>
                 <a
-                  href="/#contact"
+                  href="/iscriviti"
                   className="px-10 py-4 text-lg font-semibold bg-red-800 text-white rounded-full hover:bg-white hover:text-red-800 hover:border-2 hover:border-red-800 transition-all duration-300 focus:shadow-outline focus:outline-none shadow-lg transform hover:scale-105"
                 >
                   Inizia la tua avventura →
