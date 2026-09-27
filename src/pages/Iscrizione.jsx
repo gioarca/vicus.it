@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import emailjs from "@emailjs/browser";
 
-// Chiavi EmailJS da .env (stesso service del form contatti, template dedicato)
+// Chiavi EmailJS da .env (stesso service e stesso template del form contatti)
 const EMAILJS = {
   serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
   templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
@@ -86,22 +86,25 @@ export default function IscrizioneVicus({
       return;
     }
 
+    // Nomi allineati al template EmailJS condiviso con il form contatti:
+    // {{user_name}} {{user_email}} {{user_job}} {{user_time}} {{message}}
+    const params = {
+      user_name: payload.nome,
+      user_email: payload.email,
+      user_job: "Iscrizione alla waitlist",
+      user_time: payload.periodo ?? "non indicato",
+      message: `Iscritto da: ${payload.source} · ${new Date().toLocaleString(
+        "it-IT",
+        { timeZone: "Europe/Rome" },
+      )} · Privacy v${payload.privacyVersione}`,
+    };
+
+    if (import.meta.env.DEV) console.log("[Vicus] invio a EmailJS:", params);
+
     try {
-      await emailjs.send(
-        EMAILJS.serviceId,
-        EMAILJS.templateId,
-        {
-          nome: payload.nome,
-          email: payload.email,
-          periodo: payload.periodo ?? "non indicato",
-          source: payload.source,
-          privacy_versione: payload.privacyVersione,
-          data_iscrizione: new Date().toLocaleString("it-IT", {
-            timeZone: "Europe/Rome",
-          }),
-        },
-        { publicKey: EMAILJS.publicKey },
-      );
+      await emailjs.send(EMAILJS.serviceId, EMAILJS.templateId, params, {
+        publicKey: EMAILJS.publicKey,
+      });
 
       onSuccess?.(payload);
       navigate("/thanks", {
