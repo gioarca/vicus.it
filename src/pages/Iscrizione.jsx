@@ -5,7 +5,7 @@ import emailjs from "@emailjs/browser";
 // Chiavi EmailJS da .env (stesso service del form contatti, template dedicato)
 const EMAILJS = {
   serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
-  templateId: import.meta.env.VITE_EMAILJS_WAITLIST_TEMPLATE_ID,
+  templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
   publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
 };
 const EMAILJS_CONFIGURATO = Boolean(

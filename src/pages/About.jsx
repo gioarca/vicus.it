@@ -257,6 +257,7 @@
 //   );
 // }
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, MotionConfig } from "framer-motion";
 import {
@@ -264,7 +265,9 @@ import {
   HomeModernIcon,
   ComputerDesktopIcon,
   CheckIcon,
+  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
+import { PlayIcon } from "@heroicons/react/24/solid";
 
 /**
  * Pagina Chi siamo — unione delle due versioni di About.
@@ -357,43 +360,32 @@ const PASSI = [
 
 const PERCHE_ORA = [
   {
+    stat: "3,55 mln",
     title: "Il remote work è la norma",
     text: "3,55 milioni di lavoratori in Italia fanno smart working nel 2024. Il 73% si opporrebbe se l'azienda lo eliminasse. Non serve più stare in città.",
     source: "Osservatorio Smart Working Politecnico Milano 2024",
     link: "https://www.osservatori.net/it/ricerche/comunicati-stampa/smart-working-italia-numeri-trend",
   },
   {
+    stat: "1 mld €",
     title: "PNRR: 1 miliardo per i borghi",
     text: "Il Piano Nazionale Borghi destina oltre 1 miliardo di euro per rigenerare 250 borghi italiani. È il momento giusto per investire.",
     source: "Ministero della Cultura - PNRR",
     link: "https://pnrr.cultura.gov.it/misura-2-rigenerazione-di-piccoli-siti-culturali-patrimonio-culturale-religioso-e-rurale/2-1-attrattivita-dei-borghi/",
   },
   {
+    stat: "93%",
     title: "Il 93% dei nomadi vuole i borghi",
     text: "Il 93% dei nomadi digitali intervistati vuole soggiornare nei piccoli comuni italiani, cercando qualità della vita e autenticità.",
     source: "Associazione Italiana Nomadi Digitali 2023",
     link: "https://www.nomadidigitali.org/",
   },
   {
+    stat: "341",
     title: "341 comuni senza nascite",
     text: "Nel 2023, 341 comuni italiani non hanno registrato nemmeno una nascita. Tra 10 anni molti borghi saranno irrecuperabili.",
     source: "ISTAT 2024",
     link: "https://drive.google.com/file/d/1ENls-X9CcmW5wN8AMSmvSQd-W_2mLSfP/view?usp=sharing",
-  },
-];
-
-const TEAM = [
-  {
-    nome: "Giorgio",
-    ruolo: "CEO & Founder",
-    foto: "https://res.cloudinary.com/dzoceyg2u/image/upload/v1780321022/IMG_4192_jsqapx.jpg",
-    bio: "Formazione in meccatronica e master all'HFarm College. Ha attraversato il manifatturiero come Sales Engineer prima di approdare al turismo e all'innovazione digitale — tre anni a Berlino, visione internazionale, operatività concreta. Cresciuto tra il mare e i borghi dell'Italia interna, porta in Vicus rigore tecnico, orientamento commerciale e la convinzione diretta che si possa lavorare bene ovunque, a patto di scegliere il contesto giusto.",
-  },
-  {
-    nome: "Laura",
-    ruolo: "Operations Manager",
-    foto: "https://res.cloudinary.com/dzoceyg2u/image/upload/v1780320617/laura.png",
-    bio: "Oltre 10 anni nell'hospitality internazionale, 7 dei quali nel Regno Unito in strutture di fascia alta — tra cui il ruolo di Reception Manager al Park Plaza di Nottingham (gruppo Radisson). Originaria di Ischia, conosce il territorio campano dall'interno e il servizio di livello dall'alto. In Vicus presidia l'intera esperienza cliente: dall'onboarding alla gestione on-site, garantendo gli standard operativi che tengono fede al posizionamento del brand.",
   },
 ];
 
@@ -446,6 +438,52 @@ function FasciaTerra({ children, className = "" }) {
       />
       {children}
     </section>
+  );
+}
+
+// Video con anteprima: mostra la copertina e carica il player solo al clic.
+// Niente riquadro nero durante il caricamento, pagina più leggera.
+const VIDEO_ID = "Zv6JubXNAkg";
+
+function VideoRadio() {
+  const [attivo, setAttivo] = useState(false);
+
+  return (
+    <div className="relative aspect-video overflow-hidden rounded-2xl bg-gray-800 shadow-2xl ring-1 ring-white/10">
+      {attivo ? (
+        <iframe
+          className="absolute inset-0 h-full w-full"
+          src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?autoplay=1&rel=0`}
+          title="Cos'è Vicus? - Intervista su Radio Storytime"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+        />
+      ) : (
+        <button
+          type="button"
+          onClick={() => setAttivo(true)}
+          className="group absolute inset-0 h-full w-full focus:outline-none"
+          aria-label="Guarda l'intervista su Radio Storytime"
+        >
+          <img
+            src={`https://i.ytimg.com/vi/${VIDEO_ID}/hqdefault.jpg`}
+            alt=""
+            width="480"
+            height="360"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+          />
+          <span className="absolute inset-0 bg-black/35 transition-colors duration-300 group-hover:bg-black/25" />
+          <span className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-terra text-white shadow-2xl ring-8 ring-white/20 transition duration-300 group-hover:scale-110 group-focus-visible:ring-white">
+            <PlayIcon className="ml-1 h-9 w-9" aria-hidden="true" />
+          </span>
+          <span className="absolute bottom-5 left-5 right-5 text-left text-sm font-semibold text-white drop-shadow sm:text-base">
+            Cos'è Vicus? · Intervista su Radio Storytime
+          </span>
+        </button>
+      )}
+    </div>
   );
 }
 
@@ -669,16 +707,27 @@ export default function About() {
               </p>
             </Reveal>
 
-            <div className="mt-14 grid gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
+            <div
+              role="list"
+              className="relative mt-14 grid gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4"
+            >
+              {/* Linea che collega i passi (solo desktop) */}
+              <span
+                aria-hidden="true"
+                className="absolute left-[12.5%] right-[12.5%] top-7 hidden h-px bg-white/30 lg:block"
+              />
               {PASSI.map((p, i) => (
-                <Reveal
-                  key={p.step}
-                  delay={i * 0.1}
-                  className="rounded-2xl border border-white/20 bg-white/10 p-7 backdrop-blur-md transition-colors duration-300 hover:bg-white/15"
-                >
-                  <p className="text-5xl font-bold text-white/40">{p.step}</p>
-                  <h3 className="mt-4 text-2xl font-bold">{p.title}</h3>
-                  <p className="mt-2 text-white/85">{p.description}</p>
+                <Reveal key={p.step} delay={i * 0.1} className="relative">
+                  <div
+                    role="listitem"
+                    className="flex h-full flex-col items-center rounded-2xl border border-white/20 bg-white/10 p-7 text-center backdrop-blur-md transition-colors duration-300 hover:bg-white/15 lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none lg:hover:bg-transparent"
+                  >
+                    <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white text-lg font-bold text-terra shadow-lg">
+                      {p.step}
+                    </span>
+                    <h3 className="mt-5 text-2xl font-bold">{p.title}</h3>
+                    <p className="mt-2 text-white/85">{p.description}</p>
+                  </div>
                 </Reveal>
               ))}
             </div>
@@ -697,12 +746,17 @@ export default function About() {
                 <Reveal
                   key={c.title}
                   delay={(i % 2) * 0.1}
-                  className="rounded-2xl border-l-4 border-terra bg-white p-8 shadow-lg"
+                  className="flex flex-col rounded-2xl border-l-4 border-terra bg-white p-8 shadow-lg"
                 >
-                  <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">
+                  <p className="text-4xl font-extrabold tracking-tight text-terra">
+                    {c.stat}
+                  </p>
+                  <h3 className="mt-3 text-xl font-bold text-gray-900 sm:text-2xl">
                     {c.title}
                   </h3>
-                  <p className="mt-3 leading-relaxed text-gray-700">{c.text}</p>
+                  <p className="mt-3 flex-1 leading-relaxed text-gray-700">
+                    {c.text}
+                  </p>
                   <a
                     href={c.link}
                     target="_blank"
@@ -714,52 +768,56 @@ export default function About() {
                 </Reveal>
               ))}
             </div>
+
+            {/* Fonti: compatte e apribili, vicino ai dati a cui si riferiscono */}
+            <Reveal className="mx-auto mt-10 max-w-3xl">
+              <details className="group rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold text-gray-900 [&::-webkit-details-marker]:hidden">
+                  <span>
+                    Fonti e riferimenti
+                    <span className="mt-0.5 block text-sm font-normal text-gray-500">
+                      Tutti i dati presentati provengono da fonti ufficiali e
+                      verificabili
+                    </span>
+                  </span>
+                  <ChevronDownIcon
+                    className="h-5 w-5 shrink-0 text-terra transition-transform duration-300 group-open:rotate-180"
+                    aria-hidden="true"
+                  />
+                </summary>
+                <dl className="mt-5 space-y-3 text-sm">
+                  {FONTI.map(([tema, fonte]) => (
+                    <div
+                      key={tema}
+                      className="border-l-4 border-terra py-1.5 pl-4"
+                    >
+                      <dt className="inline font-bold text-gray-900">
+                        {tema}:{" "}
+                      </dt>
+                      <dd className="inline text-gray-700">{fonte}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <p className="mt-5 text-xs text-gray-500">
+                  Per maggiori informazioni e approfondimenti, consulta i link
+                  presenti nella pagina
+                </p>
+              </details>
+            </Reveal>
           </div>
         </section>
 
-        {/* ── Il team ──────────────────────────────────────────────────── */}
+        {/* ── La nostra storia ─────────────────────────────────────────── */}
         <section className="px-4 py-16 sm:px-6 md:py-24">
-          <div className="mx-auto max-w-6xl">
-            <Reveal className="mx-auto max-w-3xl text-center">
-              <p className={kicker}>Il nostro team</p>
-              <h2 className={`mt-3 ${h2}`}>Chi siamo</h2>
-              <p className="mt-6 text-lg text-gray-600 sm:text-xl">
-                Un team di professionisti che ha scelto di mettere competenze e
-                passione al servizio del territorio
-              </p>
+          <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-5 md:gap-14">
+            <Reveal from="left" className="md:col-span-2">
+              <p className={kicker}>La nostra storia</p>
+              <h2 className={`mt-3 ${h2}`}>
+                Quello che avremmo voluto trovare
+              </h2>
             </Reveal>
 
-            <div className="mx-auto mt-14 grid max-w-4xl gap-8 sm:grid-cols-2">
-              {TEAM.map((t, i) => (
-                <Reveal key={t.nome} delay={i * 0.1}>
-                  <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-lg">
-                    <div className="aspect-[4/5] overflow-hidden bg-gray-100">
-                      <img
-                        src={t.foto}
-                        alt={`${t.nome}, ${t.ruolo} di Vicus`}
-                        width="800"
-                        height="1000"
-                        loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-                    <div className="flex-1 p-7 text-center">
-                      <h3 className="text-xl font-bold text-gray-900">
-                        {t.nome}
-                      </h3>
-                      <p className="mt-1 text-sm font-semibold text-terra">
-                        {t.ruolo}
-                      </p>
-                      <p className="mt-4 text-left text-sm leading-relaxed text-gray-600">
-                        {t.bio}
-                      </p>
-                    </div>
-                  </article>
-                </Reveal>
-              ))}
-            </div>
-
-            <Reveal className="mx-auto mt-12 max-w-4xl rounded-2xl bg-gray-50 p-8 md:p-12">
+            <Reveal from="right" className="md:col-span-3">
               <p className="text-lg leading-relaxed text-gray-700 md:text-xl">
                 Siamo nati dall'esperienza diretta di voler valorizzare il
                 territorio. Ma ci siamo scontrati con mille problemi: Wi-Fi
@@ -775,9 +833,15 @@ export default function About() {
                 rigenerazione territoriale, sviluppo economico e qualità della
                 vita.
               </p>
-              <blockquote className="mt-8 rounded-xl bg-terra p-6 text-lg font-semibold italic text-white shadow-lg shadow-terra/20">
-                “Crediamo che il futuro dell'Italia passi dai suoi piccoli
-                comuni. E siamo qui per dimostrarlo, un borgo alla volta.”
+              <blockquote className="relative mt-10 rounded-2xl bg-terra p-8 text-lg font-semibold italic text-white shadow-xl shadow-terra/20 md:text-xl">
+                <span
+                  aria-hidden="true"
+                  className="absolute -top-6 left-6 font-serif text-8xl leading-none text-terra"
+                >
+                  “
+                </span>
+                Crediamo che il futuro dell'Italia passi dai suoi piccoli
+                comuni. E siamo qui per dimostrarlo, un borgo alla volta.
               </blockquote>
             </Reveal>
           </div>
@@ -796,17 +860,18 @@ export default function About() {
               </p>
             </Reveal>
             <Reveal className="mt-12">
-              <div className="aspect-video overflow-hidden rounded-2xl bg-black shadow-2xl">
-                <iframe
-                  className="h-full w-full"
-                  src="https://www.youtube-nocookie.com/embed/Zv6JubXNAkg"
-                  title="La rinascita dei borghi italiani"
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                />
-              </div>
+              <VideoRadio />
+              <p className="mt-4 text-center text-sm text-gray-400">
+                Non parte?{" "}
+                <a
+                  href={`https://www.youtube.com/watch?v=${VIDEO_ID}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-white underline underline-offset-2 hover:text-[#f3b7a8]"
+                >
+                  Guardalo su YouTube
+                </a>
+              </p>
             </Reveal>
           </div>
         </section>
@@ -832,31 +897,6 @@ export default function About() {
             </p>
           </Reveal>
         </FasciaTerra>
-
-        {/* ── Fonti ────────────────────────────────────────────────────── */}
-        <section className="bg-gray-50 px-4 py-14 sm:px-6">
-          <Reveal className="mx-auto max-w-3xl rounded-2xl bg-white p-8 shadow-lg">
-            <h2 className="text-center text-xl font-bold text-gray-900 sm:text-2xl">
-              Fonti e riferimenti
-            </h2>
-            <p className="mt-2 text-center text-gray-600">
-              Tutti i dati presentati provengono da fonti ufficiali e
-              verificabili
-            </p>
-            <dl className="mt-6 space-y-3 text-sm">
-              {FONTI.map(([tema, fonte]) => (
-                <div key={tema} className="border-l-4 border-terra py-1.5 pl-4">
-                  <dt className="inline font-bold text-gray-900">{tema}: </dt>
-                  <dd className="inline text-gray-700">{fonte}</dd>
-                </div>
-              ))}
-            </dl>
-            <p className="mt-6 text-center text-xs text-gray-500">
-              Per maggiori informazioni e approfondimenti, consulta i link
-              presenti nella pagina
-            </p>
-          </Reveal>
-        </section>
       </main>
     </MotionConfig>
   );
