@@ -588,7 +588,7 @@ const PUBBLICI = [
   {
     Icona: BriefcaseIcon,
     chi: "Se lavori in un'azienda",
-    titolo: "Porta il tuo team fuori dallo schermo",
+    titolo: "Porta il tuo team fuori dall'ufficio",
     testo:
       "Colleghi che vedi solo in call, finalmente nella stessa piazza. Qualche giorno di lavoro vero, in un posto che vi costringe a rallentare e a parlarvi.",
   },
@@ -615,14 +615,14 @@ const VALORI = [
       "Strade percorse per secoli, mestieri che resistono, racconti custoditi da chi è rimasto. Non li guardi da una vetrina: ci passi le giornate.",
   },
   {
-    titolo: "Una scrivania con vista, e una connessione vera",
+    titolo: "Una scrivania con vista e una connessione vera",
     testo:
       "Colline che cambiano colore con le stagioni, silenzio al posto del traffico. Prima di proporre un borgo verifichiamo sul posto che ci si possa lavorare davvero.",
   },
   {
     titolo: "Il borgo ci guadagna",
     testo:
-      "Chi ospita, cucina e guida è del posto. Non prendiamo commissioni da loro, e ogni anno rendiamo conto di quanto è rimasto sul territorio.",
+      "Chi ospita, chi cucina e la guida sono del posto. Ogni anno rendiamo conto di quanto è rimasto sul territorio.",
   },
 ];
 
@@ -872,9 +872,7 @@ function Home() {
 
             <Reveal from="right">
               <p className={kicker}>Come funziona</p>
-              <h2 className={`mt-3 ${h2}`}>
-                Niente carrello. Una conversazione.
-              </h2>
+              <h2 className={`mt-3 ${h2}`}>Niente carrello.</h2>
               <p className="mt-5 text-lg leading-relaxed text-gray-700">
                 Non vendiamo pacchetti da prenotare in tre clic. Ogni partenza
                 la costruiamo insieme, con le persone che vivono nel borgo.
@@ -914,8 +912,7 @@ function Home() {
               Ogni giornata di lavoro in un borgo è spesa che resta nel borgo.
             </h2>
             <p className="mt-6 text-xl text-white/85">
-              Alloggi, pasti ed esperienze da persone del posto. E un Rendiconto
-              ogni anno.
+              Alloggi, pasti ed esperienze da persone del posto.
             </p>
             <Link to="/goals" className={`mt-10 ${btnBianco}`}>
               Cosa misuriamo, e come <span aria-hidden="true">→</span>
