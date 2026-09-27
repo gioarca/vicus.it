@@ -24,7 +24,7 @@ function Footer() {
         {/* social */}
         <div className="flex flex-col items-center gap-3">
           <p className="text-[10px] tracking-[.14em] uppercase font-semibold text-terra">
-            {t("followUs")}
+            Seguici sui social
           </p>
           <div className="flex justify-center gap-2">
             <Social

@@ -529,10 +529,10 @@ function Home() {
           </p>
 
           <a
-            href="/#contact"
+            href="/iscriviti"
             className="inline-block px-6 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 text-sm sm:text-base md:text-xl font-bold bg-white text-red-800 rounded-full hover:bg-yellow-400 hover:text-red-900 transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl focus:outline-none transform hover:scale-105 text-center w-full sm:w-auto"
           >
-            <span className="block sm:inline">Prenota ora</span>
+            <span className="block sm:inline">Unisciti alla waitlist</span>
             <span className="block sm:inline">
               {" "}
               (prima che sia troppo tardi)
@@ -543,36 +543,7 @@ function Home() {
         <div className="absolute -top-16 -left-16 w-72 h-72 bg-yellow-300 rounded-full blur-3xl opacity-20 z-0"></div>
       </section>
 
-      {/* Contact Section */}
-      <section
-        id="contact"
-        ref={contactRef}
-        className="py-12 md:py-20 bg-gray-50 scroll-mt-20"
-      >
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">
-              Inizia la tua avventura con Vicus
-            </h2>
-            <p className="text-gray-600">
-              Compila il form e ti contatteremo entro 24 ore
-            </p>
-            <p className="text-gray-600">
-              No spam, no pubblicità, solo informazioni utili per te
-              <strong> e per il tuo lavoro da remoto.</strong>
-            </p>
-          </div>
-
-          {/* Placeholder per BorgoForm */}
-          <motion.div
-            whileInView={{ opacity: [0, 1], y: [30, 0] }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <Form />
-          </motion.div>
-        </div>
-      </section>
+      {/* Contact Section - cancellata il 27.09.2026*/}
     </motion.div>
   );
 }
