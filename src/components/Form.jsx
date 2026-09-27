@@ -281,359 +281,341 @@
 // }
 
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import emailjs from "@emailjs/browser";
 
-// ─── Line Input ───────────────────────────────────────────────────────────────
-function LineInput({
-  id,
-  name,
-  type = "text",
-  value,
-  onChange,
-  label,
-  placeholder,
-  required,
-}) {
-  const [focused, setFocused] = useState(false);
+// ─── Config EmailJS (da .env) ─────────────────────────────────────────────────
+const EMAILJS = {
+  serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+  templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+};
+
+const PRIVACY_URL = "https://www.iubenda.com/privacy-policy/19298973"; // TODO: ID reale
+const CONTACT_EMAIL = "borghisud@gmail.com";
+
+const labelClass =
+  "text-[11px] font-bold uppercase tracking-[0.12em] text-stone-400";
+
+function RequiredMark() {
+  return (
+    <span className="text-red-600 ml-1" aria-hidden="true">
+      *
+    </span>
+  );
+}
+
+// ─── Line Input (input o textarea con sottolineatura animata) ─────────────────
+function LineInput({ id, label, required, multiline = false, ...props }) {
+  const Field = multiline ? "textarea" : "input";
 
   return (
     <div className="flex flex-col gap-2">
-      <label
-        htmlFor={id}
-        className="text-[11px] font-bold uppercase tracking-[0.12em] text-stone-400"
-      >
+      <label htmlFor={id} className={labelClass}>
         {label}
-        {required && <span className="text-red-600 ml-1">*</span>}
+        {required && <RequiredMark />}
       </label>
       <div className="relative">
-        <input
-          type={type}
+        <Field
           id={id}
-          name={name}
-          value={value}
-          onChange={onChange}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          name={props.name ?? id}
           required={required}
-          placeholder={placeholder}
-          className="w-full pb-3 pt-0.5 text-[16px] font-medium text-stone-900 bg-transparent border-0 border-b-2 border-stone-200 outline-none transition-colors duration-200 placeholder:text-stone-300 focus:border-red-600"
+          className={`peer w-full pt-0.5 text-[16px] font-medium text-stone-900 bg-transparent border-0 border-b-2 border-stone-200 outline-none placeholder:text-stone-300 ${
+            multiline ? "pb-2 resize-none block" : "pb-3"
+          }`}
+          {...props}
         />
-        {/* Animated underline */}
+        {/* Sottolineatura animata, guidata dal focus via CSS */}
         <span
-          className="absolute bottom-0 left-0 h-0.5 bg-red-600 transition-all duration-300 pointer-events-none"
-          style={{ width: focused ? "100%" : "0%" }}
+          aria-hidden="true"
+          className="absolute bottom-0 left-0 h-0.5 w-0 bg-red-600 transition-all duration-300 pointer-events-none peer-focus:w-full"
         />
       </div>
     </div>
   );
 }
 
-// ─── Pill Select ──────────────────────────────────────────────────────────────
+// ─── Pill Select (radio nativi con stile a pillola) ───────────────────────────
 function PillSelect({ name, value, onChange, label, options, required }) {
   return (
-    <div className="flex flex-col gap-2">
-      <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-stone-400">
+    <fieldset>
+      <legend className={`${labelClass} mb-3`}>
         {label}
-        {required && <span className="text-red-600 ml-1">*</span>}
-      </span>
-      <div className="flex flex-wrap gap-2 pt-1">
+        {required && <RequiredMark />}
+      </legend>
+      <div className="flex flex-wrap gap-2">
         {options.map((o) => (
-          <button
-            key={o.value}
-            type="button"
-            onClick={() => onChange({ target: { name, value: o.value } })}
-            className={`px-4 py-2 rounded-full text-sm font-semibold border-2 transition-all duration-150 ${
-              value === o.value
-                ? "bg-red-600 border-red-600 text-white"
-                : "bg-white border-stone-200 text-stone-500 hover:border-red-300 hover:text-red-600"
-            }`}
-          >
-            {o.label}
-          </button>
+          <label key={o.value} className="cursor-pointer">
+            <input
+              type="radio"
+              name={name}
+              value={o.value}
+              checked={value === o.value}
+              onChange={onChange}
+              required={required}
+              className="peer sr-only"
+            />
+            <span className="block px-4 py-2 rounded-full text-sm font-semibold border-2 transition-all duration-150 bg-white border-stone-200 text-stone-500 hover:border-red-300 hover:text-red-600 peer-checked:bg-red-600 peer-checked:border-red-600 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-red-600 peer-focus-visible:ring-offset-2">
+              {o.label}
+            </span>
+          </label>
         ))}
       </div>
-      {/* Hidden input per emailjs */}
-      <input type="hidden" name={name} value={value} />
+    </fieldset>
+  );
+}
+
+// ─── Checkbox privacy ─────────────────────────────────────────────────────────
+function PrivacyCheckbox({ checked, onChange }) {
+  return (
+    <div className="flex items-start gap-3">
+      <input
+        type="checkbox"
+        id="privacy"
+        name="privacy"
+        value="accettata"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        required
+        className="peer sr-only"
+      />
+      <label
+        htmlFor="privacy"
+        aria-hidden="true"
+        className={`mt-0.5 w-5 h-5 shrink-0 rounded-md border-2 flex items-center justify-center cursor-pointer transition-all duration-150 peer-focus-visible:ring-2 peer-focus-visible:ring-red-600 peer-focus-visible:ring-offset-2 ${
+          checked ? "bg-red-600 border-red-600" : "border-stone-300 bg-white"
+        }`}
+      >
+        {checked && (
+          <svg
+            className="w-3 h-3 text-white"
+            fill="none"
+            viewBox="0 0 12 12"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M2 6l3 3 5-5"
+            />
+          </svg>
+        )}
+      </label>
+      <label
+        htmlFor="privacy"
+        className="text-sm text-stone-500 leading-relaxed cursor-pointer select-none"
+      >
+        Ho letto e accetto la{" "}
+        <a
+          href={PRIVACY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-red-600 font-semibold hover:text-red-700 underline underline-offset-2 transition-colors"
+        >
+          Privacy Policy
+        </a>
+        <RequiredMark />
+      </label>
     </div>
   );
 }
 
-// ─── Contenuto del form (riusabile) ───────────────────────────────────────────
-function FormContent({
-  form,
-  formValues,
-  handleChange,
-  privacyAccepted,
-  setPrivacyAccepted,
-  isSubmitting,
-  sendEmail,
-}) {
+// ─── Bottone di invio ─────────────────────────────────────────────────────────
+function SubmitButton({ isSubmitting }) {
   return (
-    <form ref={form} onSubmit={sendEmail} className="space-y-8">
-      {/* Nome + Email */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-        <LineInput
-          id="user_name"
-          name="user_name"
-          label="Nome completo"
-          placeholder="Mario Rossi"
-          value={formValues.user_name}
-          onChange={handleChange}
-          required
-        />
-        <LineInput
-          id="user_email"
-          name="user_email"
-          type="email"
-          label="Email"
-          placeholder="mario@email.it"
-          value={formValues.user_email}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      {/* Professione + Quando */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-        <LineInput
-          id="user_job"
-          name="user_job"
-          label="Professione"
-          placeholder="Designer, Developer..."
-          value={formValues.user_job}
-          onChange={handleChange}
-          required
-        />
-        <PillSelect
-          name="user_time"
-          label="Quando vorresti venire"
-          value={formValues.user_time}
-          onChange={handleChange}
-          required
-          options={[
-            { value: "Prossimo mese", label: "Presto" },
-            { value: "Entro 3 mesi", label: "3 mesi" },
-            { value: "Entro 6 mesi", label: "6 mesi" },
-          ]}
-        />
-      </div>
-
-      {/* Messaggio */}
-      <div className="flex flex-col gap-2">
-        <label
-          htmlFor="message"
-          className="text-[11px] font-bold uppercase tracking-[0.12em] text-stone-400"
-        >
-          Messaggio
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          value={formValues.message}
-          onChange={handleChange}
-          rows={3}
-          placeholder="Raccontaci qualcosa di te e cosa stai cercando..."
-          className="w-full pb-2 pt-0.5 text-[16px] font-medium text-stone-900 bg-transparent border-0 border-b-2 border-stone-200 outline-none resize-none transition-colors duration-200 placeholder:text-stone-300 focus:border-red-600"
-        />
-      </div>
-
-      {/* Divisore */}
-      <div className="border-t border-stone-100" />
-
-      {/* Privacy */}
-      <div className="flex items-start gap-3">
-        <div className="relative flex-shrink-0 mt-0.5">
-          <input
-            type="checkbox"
-            id="privacy"
-            name="privacy"
-            checked={privacyAccepted}
-            onChange={(e) => setPrivacyAccepted(e.target.checked)}
-            required
-            className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10 m-0"
-          />
-          <div
-            className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-150 pointer-events-none ${
-              privacyAccepted
-                ? "bg-red-600 border-red-600"
-                : "border-stone-300 bg-white"
-            }`}
-          >
-            {privacyAccepted && (
-              <svg
-                className="w-3 h-3 text-white"
-                fill="none"
-                viewBox="0 0 12 12"
-                stroke="currentColor"
-                strokeWidth={2.5}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M2 6l3 3 5-5"
-                />
-              </svg>
-            )}
-          </div>
-        </div>
-        <label
-          htmlFor="privacy"
-          className="text-sm text-stone-500 leading-relaxed cursor-pointer select-none"
-        >
-          Ho letto e accetto la{" "}
-          <a
-            href="https://www.iubenda.com/privacy-policy/12345678"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-red-600 font-semibold hover:text-red-700 underline underline-offset-2 transition-colors"
-          >
-            Privacy Policy
-          </a>
-          <span className="text-red-600 ml-0.5">*</span>
-        </label>
-      </div>
-
-      <p className="text-xs text-stone-400 -mt-4">
-        <span className="text-red-600">*</span> Campi obbligatori
-      </p>
-
-      {/* CTA */}
-      <button
-        type="submit"
-        disabled={isSubmitting || !privacyAccepted}
-        className="w-full bg-red-600 hover:bg-red-700 active:scale-[0.99] disabled:bg-stone-200 disabled:text-stone-400 disabled:cursor-not-allowed text-white font-bold text-base py-4 rounded-xl transition-all duration-200 relative"
-      >
-        <span
-          className={`transition-opacity duration-150 ${
-            isSubmitting ? "opacity-0" : "opacity-100"
-          }`}
-        >
-          Invia la richiesta →
+    <button
+      type="submit"
+      disabled={isSubmitting}
+      aria-busy={isSubmitting}
+      className="w-full bg-red-600 hover:bg-red-700 active:scale-[0.99] disabled:bg-stone-200 disabled:text-stone-400 disabled:cursor-not-allowed text-white font-bold text-base py-4 rounded-xl transition-all duration-200 relative"
+    >
+      <span className={isSubmitting ? "opacity-0" : "opacity-100"}>
+        Invia la richiesta →
+      </span>
+      {isSubmitting && (
+        <span className="absolute inset-0 flex items-center justify-center">
+          <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+          </svg>
+          <span className="sr-only">Invio in corso…</span>
         </span>
-        {isSubmitting && (
-          <span className="absolute inset-0 flex items-center justify-center">
-            <svg
-              className="animate-spin h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              />
-            </svg>
-          </span>
-        )}
-      </button>
-    </form>
+      )}
+    </button>
   );
 }
 
-// ─── Form principale ───────────────────────────────────────────────────────────
+// ─── Form principale ──────────────────────────────────────────────────────────
+const INITIAL_VALUES = {
+  user_name: "",
+  user_email: "",
+  user_job: "",
+  user_time: "",
+  message: "",
+};
+
 export default function Form({ embedded = false }) {
-  const form = useRef();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formValues, setFormValues] = useState({
-    user_name: "",
-    user_email: "",
-    user_job: "",
-    user_time: "",
-    message: "",
-  });
+  const formRef = useRef(null);
+  const navigate = useNavigate();
+  const [values, setValues] = useState(INITIAL_VALUES);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [status, setStatus] = useState("idle"); // idle | sending | error
+
+  const isSubmitting = status === "sending";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormValues((prev) => ({ ...prev, [name]: value }));
+    setValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const sendEmail = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!privacyAccepted)
-      return alert("Devi accettare la privacy policy per continuare.");
-    setIsSubmitting(true);
+    if (isSubmitting) return;
+    setStatus("sending");
 
-    emailjs
-      .sendForm(
-        "service_4zk556a",
-        "template_0t8cg1n",
-        form.current,
-        "nBwk1Dh-6_dCdi75H",
-      )
-      .then(
-        () => {
-          window.location.href = "/thanks";
-        },
-        (error) => {
-          console.error("FAILED...", error.text);
-          setIsSubmitting(false);
-        },
+    try {
+      await emailjs.sendForm(
+        EMAILJS.serviceId,
+        EMAILJS.templateId,
+        formRef.current,
+        { publicKey: EMAILJS.publicKey },
       );
+      navigate("/thanks");
+    } catch (err) {
+      console.error("EmailJS: invio fallito", err);
+      setStatus("error");
+    }
   };
 
-  const sharedProps = {
-    form,
-    formValues,
-    handleChange,
-    privacyAccepted,
-    setPrivacyAccepted,
-    isSubmitting,
-    sendEmail,
-  };
+  const card = (
+    <>
+      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+        <div className="h-1 bg-red-600" />
+        <div className="p-8 md:p-10">
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-8">
+            {/* Nome + Email */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <LineInput
+                id="user_name"
+                label="Nome completo"
+                placeholder="Mario Rossi"
+                autoComplete="name"
+                value={values.user_name}
+                onChange={handleChange}
+                required
+              />
+              <LineInput
+                id="user_email"
+                type="email"
+                label="Email"
+                placeholder="mario@email.it"
+                autoComplete="email"
+                value={values.user_email}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-  // ── Versione embedded: solo la card ───────────────────────────────────────
-  if (embedded) {
-    return (
-      <div className="max-w-[560px] mx-auto">
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
-          <div className="h-1 bg-red-600" />
-          <div className="p-8 md:p-10">
-            <FormContent {...sharedProps} />
-          </div>
+            {/* Professione + Quando */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <LineInput
+                id="user_job"
+                label="Professione"
+                placeholder="Designer, Developer..."
+                autoComplete="organization-title"
+                value={values.user_job}
+                onChange={handleChange}
+                required
+              />
+              <PillSelect
+                name="user_time"
+                label="Quando vorresti venire"
+                value={values.user_time}
+                onChange={handleChange}
+                required
+                options={[
+                  { value: "Prossimo mese", label: "Presto" },
+                  { value: "Entro 3 mesi", label: "3 mesi" },
+                  { value: "Entro 6 mesi", label: "6 mesi" },
+                ]}
+              />
+            </div>
+
+            {/* Messaggio */}
+            <LineInput
+              id="message"
+              multiline
+              rows={3}
+              label="Messaggio"
+              placeholder="Raccontaci qualcosa di te e cosa stai cercando..."
+              value={values.message}
+              onChange={handleChange}
+            />
+
+            <div className="border-t border-stone-100" />
+
+            <PrivacyCheckbox
+              checked={privacyAccepted}
+              onChange={setPrivacyAccepted}
+            />
+
+            <p className="text-xs text-stone-400 -mt-4">
+              <span className="text-red-600">*</span> Campi obbligatori
+            </p>
+
+            {status === "error" && (
+              <p
+                role="alert"
+                className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3"
+              >
+                Qualcosa è andato storto nell'invio. Riprova tra poco oppure
+                scrivici a{" "}
+                <a
+                  href={`mailto:${CONTACT_EMAIL}`}
+                  className="font-semibold underline"
+                >
+                  {CONTACT_EMAIL}
+                </a>
+                .
+              </p>
+            )}
+
+            <SubmitButton isSubmitting={isSubmitting} />
+          </form>
         </div>
-        <p className="text-center text-sm text-stone-400 mt-5">
-          Preferisci la mail?{" "}
-          <a
-            href="mailto:borghisud@gmail.com"
-            className="text-stone-600 font-semibold hover:text-red-600 transition-colors"
-          >
-            borghisud@gmail.com
-          </a>
-        </p>
       </div>
-    );
+
+      <p className="text-center text-sm text-stone-400 mt-5">
+        Preferisci la mail?{" "}
+        <a
+          href={`mailto:${CONTACT_EMAIL}`}
+          className="text-stone-600 font-semibold hover:text-red-600 transition-colors"
+        >
+          {CONTACT_EMAIL}
+        </a>
+      </p>
+    </>
+  );
+
+  if (embedded) {
+    return <div className="max-w-[560px] mx-auto">{card}</div>;
   }
 
-  // ── Versione standalone: pagina intera ────────────────────────────────────
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-16">
-      <div className="w-full max-w-[560px]">
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
-          <div className="h-1 bg-red-600" />
-          <div className="p-8 md:p-10">
-            <FormContent {...sharedProps} />
-          </div>
-        </div>
-
-        <p className="text-center text-sm text-stone-400 mt-5">
-          Preferisci la mail?{" "}
-          <a
-            href="mailto:borghisud@gmail.com"
-            className="text-stone-600 font-semibold hover:text-red-600 transition-colors"
-          >
-            borghisud@gmail.com
-          </a>
-        </p>
-      </div>
+      <div className="w-full max-w-[560px]">{card}</div>
     </div>
   );
 }
