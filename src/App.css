@@ -1,11 +1,17 @@
 @import "tailwindcss";
-/* @import url("https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap"); */
 
 :root {
-  font-family: "Figtree", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
   line-height: 1.5;
-  font-weight: 450;
-
+  font-weight: 500;
   background: white;
 
   font-synthesis: none;
@@ -15,7 +21,11 @@
 }
 
 .Loader {
-  z-index: 10;
-  position: absolute;
-  pointer-events: none;
+  z-index: 10; /* Priorità adeguata */
+  position: absolute; /* Sovrapponi correttamente */
+  pointer-events: none; /* Non interferire con l'interazione */
+}
+
+@theme {
+  --color-terra: #b63a25;
 }

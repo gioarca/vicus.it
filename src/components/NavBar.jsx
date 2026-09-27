@@ -37,7 +37,7 @@
 //                 alt="Logo"
 //                 className="h-6 w-auto group-hover:scale-110 transition-transform duration-200"
 //               />
-//               {/* <span className="text-xl font-semibold tracking-tight text-gray-800 group-hover:text-red-600 transition-colors duration-200">
+//               {/* <span className="text-xl font-semibold tracking-tight text-gray-800 group-hover:text-terra transition-colors duration-200">
 //                 Vicus
 //               </span> */}
 //             </a>
@@ -50,7 +50,7 @@
 //             aria-label="Menu"
 //           >
 //             {isOpen ? (
-//               <XMarkIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
+//               <XMarkIcon className="h-6 w-6 text-terra" aria-hidden="true" />
 //             ) : (
 //               <Bars3Icon className="h-6 w-6 text-gray-700" aria-hidden="true" />
 //             )}
@@ -59,37 +59,37 @@
 //           {/* Menu desktop sempre visibile */}
 //           <div className="hidden lg:flex lg:items-center lg:space-x-8">
 //             <a
-//               className="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-red-600"
+//               className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
 //               href="/"
 //             >
 //               Home
 //             </a>
 //             <a
-//               className="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-red-600"
+//               className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
 //               href="/about"
 //             >
 //               Chi Siamo
 //             </a>
 //             <a
-//               className="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-red-600"
+//               className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
 //               href="/#how-it-works"
 //             >
 //               Come funziona?
 //             </a>
 //             <a
-//               className="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-red-600"
+//               className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
 //               href="/goals"
 //             >
 //               Obiettivi
 //             </a>
 //             <a
-//               className="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-red-600"
+//               className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
 //               href="/#reviews"
 //             >
 //               Recensioni
 //             </a>
 //             <a
-//               className="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-red-600"
+//               className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
 //               href="/#contact"
 //               onClick={handleContactClick}
 //             >
@@ -111,42 +111,42 @@
 //               <div className="flex flex-col space-y-3">
 //                 <a
 //                   href="/"
-//                   className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-red-600 transition-colors"
+//                   className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-terra transition-colors"
 //                   onClick={closeMenu}
 //                 >
 //                   Home
 //                 </a>
 //                 <a
 //                   href="/about"
-//                   className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-red-600 transition-colors"
+//                   className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-terra transition-colors"
 //                   onClick={closeMenu}
 //                 >
 //                   Chi Siamo
 //                 </a>
 //                 <a
 //                   href="/#how-it-works"
-//                   className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-red-600 transition-colors"
+//                   className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-terra transition-colors"
 //                   onClick={closeMenu}
 //                 >
 //                   Come funziona?
 //                 </a>
 //                 <a
 //                   href="/goals"
-//                   className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-red-600 transition-colors"
+//                   className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-terra transition-colors"
 //                   onClick={closeMenu}
 //                 >
 //                   Obiettivi
 //                 </a>
 //                 <a
 //                   href="/#reviews"
-//                   className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-red-600 transition-colors"
+//                   className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-terra transition-colors"
 //                   onClick={closeMenu}
 //                 >
 //                   Recensioni
 //                 </a>
 //                 <a
 //                   href="/#contact"
-//                   className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-red-600 transition-colors"
+//                   className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-terra transition-colors"
 //                   onClick={handleContactClick}
 //                 >
 //                   Iscriviti alla waitlist
@@ -157,7 +157,7 @@
 //                 <div className="flex flex-col space-y-2">
 //                   <a
 //                     href="/#contact"
-//                     className="py-2 text-center bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors"
+//                     className="py-2 text-center bg-terra hover:bg-red-700 text-white rounded-md transition-colors"
 //                     onClick={handleContactClick}
 //                   >
 //                     Disconnettiti per davvero!
@@ -213,7 +213,7 @@ function NavBar({ contactRef }) {
                 alt="Logo"
                 className="h-6 w-auto group-hover:scale-110 transition-transform duration-200"
               />
-              {/* <span className="text-xl font-semibold tracking-tight text-gray-800 group-hover:text-red-600 transition-colors duration-200">
+              {/* <span className="text-xl font-semibold tracking-tight text-gray-800 group-hover:text-terra transition-colors duration-200">
                 Vicus
               </span> */}
             </a>
@@ -224,7 +224,7 @@ function NavBar({ contactRef }) {
             <a
               href="/iscriviti"
               onClick={closeMenu}
-              className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+              className="rounded-full bg-terra px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
             >
               Iscriviti
             </a>
@@ -235,10 +235,7 @@ function NavBar({ contactRef }) {
               aria-expanded={isOpen}
             >
               {isOpen ? (
-                <XMarkIcon
-                  className="h-6 w-6 text-red-600"
-                  aria-hidden="true"
-                />
+                <XMarkIcon className="h-6 w-6 text-terra" aria-hidden="true" />
               ) : (
                 <Bars3Icon
                   className="h-6 w-6 text-gray-700"
@@ -251,37 +248,37 @@ function NavBar({ contactRef }) {
           {/* Menu desktop sempre visibile */}
           <div className="hidden lg:flex lg:items-center lg:space-x-8">
             <a
-              className="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-red-600"
+              className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
               href="/"
             >
               Home
             </a>
             <a
-              className="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-red-600"
+              className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
               href="/about"
             >
               Chi Siamo
             </a>
             <a
-              className="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-red-600"
+              className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
               href="/#how-it-works"
             >
               Come funziona?
             </a>
             <a
-              className="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-red-600"
+              className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
               href="/goals"
             >
               Obiettivi
             </a>
             <a
-              className="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-red-600"
+              className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
               href="/#reviews"
             >
               Recensioni
             </a>
             <a
-              className="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-red-600"
+              className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
               href="/#contact"
               onClick={handleContactClick}
             >
@@ -289,7 +286,7 @@ function NavBar({ contactRef }) {
             </a>
             <a
               href="/iscriviti"
-              className="rounded-full bg-red-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+              className="rounded-full bg-terra px-5 py-2 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
             >
               Iscriviti alla waitlist
             </a>
@@ -309,42 +306,42 @@ function NavBar({ contactRef }) {
               <div className="flex flex-col space-y-3">
                 <a
                   href="/"
-                  className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-red-600 transition-colors"
+                  className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-terra transition-colors"
                   onClick={closeMenu}
                 >
                   Home
                 </a>
                 <a
                   href="/about"
-                  className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-red-600 transition-colors"
+                  className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-terra transition-colors"
                   onClick={closeMenu}
                 >
                   Chi Siamo
                 </a>
                 <a
                   href="/#how-it-works"
-                  className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-red-600 transition-colors"
+                  className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-terra transition-colors"
                   onClick={closeMenu}
                 >
                   Come funziona?
                 </a>
                 <a
                   href="/goals"
-                  className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-red-600 transition-colors"
+                  className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-terra transition-colors"
                   onClick={closeMenu}
                 >
                   Obiettivi
                 </a>
                 <a
                   href="/#reviews"
-                  className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-red-600 transition-colors"
+                  className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-terra transition-colors"
                   onClick={closeMenu}
                 >
                   Recensioni
                 </a>
                 <a
                   href="/#contact"
-                  className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-red-600 transition-colors"
+                  className="px-2 py-2 text-gray-700 hover:bg-gray-50 rounded-md hover:text-terra transition-colors"
                   onClick={handleContactClick}
                 >
                   Contatti
@@ -355,7 +352,7 @@ function NavBar({ contactRef }) {
                 <div className="flex flex-col space-y-2">
                   <a
                     href="/iscriviti"
-                    className="py-3 text-center font-semibold bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors"
+                    className="py-3 text-center font-semibold bg-terra hover:bg-red-800 text-white rounded-md transition-colors"
                     onClick={closeMenu}
                   >
                     Iscriviti alla waitlist

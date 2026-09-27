@@ -79,7 +79,7 @@ function Home() {
             </motion.h1>
 
             <motion.p
-              className="text-lg font-medium text-red-700 mb-4"
+              className="text-lg font-medium text-terra mb-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
@@ -115,7 +115,7 @@ function Home() {
               <button>
                 <a
                   href="/iscriviti"
-                  className="px-10 py-4 text-lg font-semibold bg-red-800 text-white rounded-full hover:bg-white hover:text-red-800 hover:border-2 hover:border-red-800 transition-all duration-300 focus:shadow-outline focus:outline-none shadow-lg transform hover:scale-105"
+                  className="px-10 py-4 text-lg font-semibold bg-terra text-white rounded-full hover:bg-white hover:text-red-800 hover:border-2 hover:border-red-800 transition-all duration-300 focus:shadow-outline focus:outline-none shadow-lg transform hover:scale-105"
                 >
                   Inizia la tua avventura →
                 </a>
@@ -225,7 +225,7 @@ function Home() {
                 <button>
                   <a
                     href="/about"
-                    className="px-8 py-3 font-semibold bg-red-800 text-white rounded-full hover:bg-white hover:text-red-800 hover:border-2 hover:border-red-800 transition-all duration-300 focus:shadow-outline focus:outline-none shadow-md"
+                    className="px-8 py-3 font-semibold bg-terra text-white rounded-full hover:bg-white hover:text-terra hover:border-2 hover:border-terra transition-all duration-300 focus:shadow-outline focus:outline-none shadow-md"
                   >
                     Scopri tutti i dettagli
                   </a>

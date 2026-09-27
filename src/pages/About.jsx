@@ -84,7 +84,7 @@ export default function About() {
               chiara:
             </motion.p>
             <motion.p
-              className="text-3xl font-bold text-red-800"
+              className="text-3xl font-bold text-terra"
               variants={fadeInUp}
             >
               riscoprire il SUD, viverlo, lavorarci.
