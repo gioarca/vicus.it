@@ -1,144 +1,261 @@
-function Goals() {
-  // Mock translation function for demonstration
-  const t = (key) => {
-    const translations = {
-      "goals_page.title": "I Nostri Obiettivi",
-      "goals_page.goal_1":
-        "Promuovere una crescita economica duratura, inclusiva e sostenibile, la piena e produttiva occupazione e un lavoro dignitoso per tutti.",
-      "goals_page.goal_2":
-        "Costruire infrastrutture resilienti, promuovere l'industrializzazione inclusiva e sostenibile e favorire l'innovazione.",
-      "goals_page.goal_3":
-        "Ridurre le disuguaglianze all'interno dei piccoli Paesi.",
-    };
-    return translations[key] || key;
-  };
+import { Link } from "react-router-dom";
 
-  const goals = [
-    {
-      id: 1,
-      image:
-        "https://e4k4c4x9.delivery.rocketcdn.me/it/wp-content/uploads/sites/3/2019/03/SDG-icon-IT-RGB-08.jpg",
-      alt: "Obiettivo 8 - Lavoro dignitoso e crescita economica",
-      translationKey: "goals_page.goal_1",
-    },
-    {
-      id: 2,
-      image:
-        "https://e4k4c4x9.delivery.rocketcdn.me/it/wp-content/uploads/sites/3/2019/03/SDG-icon-IT-RGB-09.jpg",
-      alt: "Obiettivo 9 - Imprese, innovazione e infrastrutture",
-      translationKey: "goals_page.goal_2",
-    },
-    {
-      id: 3,
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3c0TqKGHnyrptqP_NRiPY6_eESR-gFP_3Hg&s",
-      alt: "Obiettivo 10 - Ridurre le disuguaglianze",
-      translationKey: "goals_page.goal_3",
-    },
-  ];
+/**
+ * Pagina Obiettivi — palette del sito: neutral + rosso (red-600).
+ *
+ * I "risultati" sono gli indicatori del Rendiconto di Impatto Territoriale.
+ * Finché non esiste un Rendiconto pubblicato, `valore` resta null e la card
+ * mostra "In arrivo": NON inserire stime o obiettivi come se fossero risultati.
+ * Quando esce il primo Rendiconto, basta compilare `valore` e `nota`.
+ */
+
+// ─── Obiettivi (SDG di riferimento) ───────────────────────────────────────────
+const OBIETTIVI = [
+  {
+    sdg: 8,
+    nome: "Lavoro dignitoso e crescita economica",
+    titolo: "La spesa resta nel borgo",
+    testo:
+      "Alloggi, pasti, trasporti ed esperienze li forniscono persone e imprese del territorio. Le loro fatture sono intestate direttamente all'azienda cliente: il lavoro viene pagato a chi lo fa, senza intermediari che trattengono una parte.",
+  },
+  {
+    sdg: 9,
+    nome: "Imprese, innovazione e infrastrutture",
+    titolo: "Un borgo dove si può lavorare davvero",
+    testo:
+      "Prima di proporre un borgo ne verifichiamo sul posto connessione e spazi di lavoro. Un team che lavora bene lì dimostra che quel territorio è una scelta praticabile, non un ripiego romantico.",
+  },
+  {
+    sdg: 10,
+    nome: "Ridurre le disuguaglianze",
+    titolo: "Restituzione documentata, non beneficenza",
+    testo:
+      "Con ogni Comune firmiamo un patto con impegni misurabili. Ogni anno rendiamo conto di cosa abbiamo portato al territorio, in un documento che il Comune riceve e può pubblicare.",
+  },
+];
+
+// ─── Indicatori del Rendiconto (i risultati misurabili) ───────────────────────
+const INDICATORI = [
+  {
+    etichetta: "Giornate-persona di presenza",
+    descrizione:
+      "Quante giornate i team ospitati hanno effettivamente vissuto nel borgo.",
+    valore: null,
+    nota: "",
+  },
+  {
+    etichetta: "Spesa verso fornitori locali",
+    descrizione:
+      "Quota del budget di ogni retreat fatturata da imprese del territorio.",
+    valore: null,
+    nota: "",
+  },
+  {
+    etichetta: "Fornitori locali coinvolti",
+    descrizione:
+      "Quante imprese del borgo hanno lavorato con noi, e di che tipo.",
+    valore: null,
+    nota: "",
+  },
+  {
+    etichetta: "Ore con la comunità",
+    descrizione: "Laboratori, visite e incontri con artigiani e residenti.",
+    valore: null,
+    nota: "",
+  },
+  {
+    etichetta: "Contributo al progetto culturale",
+    descrizione:
+      "Quanto è andato al progetto culturale scelto ogni anno con il Comune.",
+    valore: null,
+    nota: "",
+  },
+  {
+    etichetta: "Valutazione degli ospiti",
+    descrizione:
+      "Come i partecipanti giudicano l'esperienza, a retreat concluso.",
+    valore: null,
+    nota: "",
+  },
+];
+
+// ─── Impegni verificabili ─────────────────────────────────────────────────────
+const IMPEGNI = [
+  {
+    titolo: "Un Rendiconto ogni anno",
+    testo:
+      "Entro il 31 marzo ogni Comune partner riceve il Rendiconto dell'anno precedente, con i dati di ogni indicatore.",
+  },
+  {
+    titolo: "Promesso contro realizzato",
+    testo:
+      "Per ogni impegno mostriamo quanto avevamo promesso, quanto abbiamo fatto e lo scostamento. Anche quando siamo sotto.",
+  },
+  {
+    titolo: "Nessuna commissione sui fornitori",
+    testo:
+      "Non prendiamo percentuali da chi lavora nel borgo. Il nostro compenso è la consulenza che paga l'azienda, e basta.",
+  },
+  {
+    titolo: "Solo operatori del territorio",
+    testo:
+      "Le esperienze sono proposte da persone che vivono e lavorano nel borgo, non da operatori esterni.",
+  },
+];
+
+const kicker =
+  "text-[11px] font-semibold uppercase tracking-[0.14em] text-red-600";
+
+function Goals() {
+  const risultatiDisponibili = INDICATORI.some((i) => i.valore !== null);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 py-36 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            {t("goals_page.title")}
+    <main className="bg-white px-5 pb-24 pt-32 sm:px-6 sm:pt-40">
+      <title>Obiettivi — Vicus</title>
+
+      <div className="mx-auto max-w-5xl">
+        {/* ── Intestazione ─────────────────────────────────────────────── */}
+        <header className="max-w-2xl">
+          <p className={kicker}>Obiettivi</p>
+          <h1 className="mt-3 text-[30px] font-normal leading-tight tracking-tight text-neutral-900 sm:text-[42px]">
+            Cosa vogliamo cambiare, e come lo misuriamo
           </h1>
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-green-500 mx-auto rounded-full"></div>
-          <p className="text-lg text-gray-600 mt-6 max-w-2xl mx-auto">
-            I nostri obiettivi per un futuro sostenibile e inclusivo
+          <p className="mt-5 text-[16px] leading-relaxed text-neutral-500">
+            Portare un team a lavorare in un borgo ha senso solo se il borgo ci
+            guadagna qualcosa di concreto. Per questo ogni obiettivo ha un
+            indicatore, e ogni indicatore finisce in un documento pubblico.
           </p>
-        </div>
+        </header>
 
-        {/* Goals Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {goals.map((goal, index) => (
-            <div
-              key={goal.id}
-              className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-2"
-              style={{
-                animationDelay: `${index * 150}ms`,
-                animation: "fadeInUp 0.6s ease-out forwards",
-              }}
+        {/* ── Tre obiettivi ────────────────────────────────────────────── */}
+        <section aria-labelledby="obiettivi-titolo" className="mt-16 sm:mt-20">
+          <h2 id="obiettivi-titolo" className="sr-only">
+            I nostri obiettivi
+          </h2>
+          <ol className="grid gap-5 md:grid-cols-3">
+            {OBIETTIVI.map((o) => (
+              <li
+                key={o.sdg}
+                className="flex flex-col rounded-2xl border border-neutral-200 bg-white p-6 transition-colors hover:border-neutral-300"
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-red-600 text-[15px] font-semibold text-white"
+                    aria-hidden="true"
+                  >
+                    {o.sdg}
+                  </span>
+                  <span className="text-[12px] leading-snug text-neutral-400">
+                    Obiettivo ONU {o.sdg}
+                    <br />
+                    {o.nome}
+                  </span>
+                </div>
+                <h3 className="mt-6 text-[19px] font-medium leading-snug text-neutral-900">
+                  {o.titolo}
+                </h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-neutral-500">
+                  {o.testo}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        {/* ── Risultati misurabili ─────────────────────────────────────── */}
+        <section aria-labelledby="risultati-titolo" className="mt-24 sm:mt-28">
+          <div className="max-w-2xl">
+            <p className={kicker}>Risultati</p>
+            <h2
+              id="risultati-titolo"
+              className="mt-3 text-[24px] font-normal leading-snug tracking-tight text-neutral-900 sm:text-[30px]"
             >
-              {/* Image Container */}
-              <div className="relative p-6 bg-gradient-to-br from-gray-50 to-white">
-                <div className="relative overflow-hidden rounded-xl bg-white shadow-inner">
-                  <div className="w-full h-48 flex items-center justify-center">
-                    <img
-                      src={goal.image}
-                      alt={goal.alt}
-                      className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500 p-4"
-                      loading="lazy"
-                      onError={(e) => {
-                        e.target.style.display = "none";
-                        e.target.nextSibling.style.display = "flex";
-                      }}
-                    />
-                    <div
-                      className="hidden w-full h-full items-center justify-center bg-gradient-to-br from-blue-100 to-green-100"
-                      style={{ display: "none" }}
-                    >
-                      <div className="text-center p-4">
-                        <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-green-500 rounded-full flex items-center justify-center">
-                          <span className="text-white font-bold text-2xl">
-                            {goal.id === 1 ? "8" : goal.id === 2 ? "9" : "10"}
-                          </span>
-                        </div>
-                        <h3 className="font-semibold text-gray-700 text-sm">
-                          {goal.id === 1
-                            ? "Lavoro Dignitoso"
-                            : goal.id === 2
-                              ? "Innovazione"
-                              : "Riduzione Disuguaglianze"}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
-                </div>
+              Sei numeri, verificabili, ogni anno
+            </h2>
+            <p className="mt-4 text-[15px] leading-relaxed text-neutral-500">
+              {risultatiDisponibili
+                ? "I dati vengono dal Rendiconto di Impatto Territoriale che trasmettiamo a ogni Comune partner."
+                : "Sono gli indicatori del Rendiconto di Impatto Territoriale. Siamo all'inizio: pubblicheremo qui i valori reali appena esce il primo Rendiconto, senza stime né proiezioni."}
+            </p>
+          </div>
+
+          <dl className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-200 sm:grid-cols-2 lg:grid-cols-3">
+            {INDICATORI.map((i) => (
+              <div key={i.etichetta} className="flex flex-col bg-white p-6">
+                <dt className="text-[14px] font-medium text-neutral-900">
+                  {i.etichetta}
+                </dt>
+                <dd className="order-first mb-4">
+                  {i.valore !== null ? (
+                    <span className="text-[34px] font-normal leading-none tracking-tight text-red-600">
+                      {i.valore}
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-2 rounded-full border border-dashed border-neutral-300 px-3 py-1 text-[12px] text-neutral-400">
+                      <span
+                        className="h-1.5 w-1.5 rounded-full bg-red-600"
+                        aria-hidden="true"
+                      />
+                      In arrivo col primo Rendiconto
+                    </span>
+                  )}
+                </dd>
+                <dd className="mt-2 text-[14px] leading-relaxed text-neutral-500">
+                  {i.descrizione}
+                </dd>
+                {i.nota && (
+                  <dd className="mt-3 text-[12px] text-neutral-400">
+                    {i.nota}
+                  </dd>
+                )}
               </div>
+            ))}
+          </dl>
+        </section>
 
-              {/* Content */}
-              <div className="p-6 pt-2">
-                <div className="flex items-start">
-                  <div className="w-2 h-12 bg-gradient-to-b from-blue-500 to-green-500 rounded-full mr-4 flex-shrink-0"></div>
-                  <p className="text-gray-700 leading-relaxed text-sm">
-                    {t(goal.translationKey)}
-                  </p>
-                </div>
-              </div>
+        {/* ── Impegni ──────────────────────────────────────────────────── */}
+        <section aria-labelledby="impegni-titolo" className="mt-24 sm:mt-28">
+          <div className="max-w-2xl">
+            <p className={kicker}>Impegni</p>
+            <h2
+              id="impegni-titolo"
+              className="mt-3 text-[24px] font-normal leading-snug tracking-tight text-neutral-900 sm:text-[30px]"
+            >
+              Cosa puoi verificare da subito
+            </h2>
+          </div>
 
-              {/* Hover Effect Indicator */}
-              <div className="h-1 bg-gradient-to-r from-blue-500 to-green-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-            </div>
-          ))}
-        </div>
+          <ul className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2">
+            {IMPEGNI.map((imp) => (
+              <li key={imp.titolo} className="border-l-2 border-red-600 pl-5">
+                <h3 className="text-[16px] font-medium text-neutral-900">
+                  {imp.titolo}
+                </h3>
+                <p className="mt-2 text-[15px] leading-relaxed text-neutral-500">
+                  {imp.testo}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
 
-        {/* Call to Action */}
-        <div className="text-center mt-16">
-          <a href="/about">
-            <button className="bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold py-4 px-8 rounded-full hover:from-blue-700 hover:to-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
-              Scopri di più sui nostri obiettivi
-            </button>
-          </a>
-        </div>
+        {/* ── CTA ──────────────────────────────────────────────────────── */}
+        <section className="mt-24 rounded-2xl bg-neutral-900 px-6 py-12 text-center sm:mt-28 sm:px-12">
+          <h2 className="text-[22px] font-normal leading-snug tracking-tight text-white sm:text-[28px]">
+            Vuoi esserci quando apriamo le prime date?
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-neutral-400">
+            Chi è in lista viene avvisato per primo e sceglie per primo.
+          </p>
+          <Link
+            to="/iscriviti"
+            className="mt-8 inline-flex min-h-13 w-full items-center justify-center rounded-lg bg-red-600 px-6 text-[16px] font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 sm:w-auto sm:min-w-55"
+          >
+            Iscriviti alla waitlist
+          </Link>
+        </section>
       </div>
-
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
-    </div>
+    </main>
   );
 }
 

@@ -261,12 +261,6 @@ function NavBar({ contactRef }) {
             </a>
             <a
               className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
-              href="/#how-it-works"
-            >
-              Come funziona?
-            </a>
-            <a
-              className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
               href="/goals"
             >
               Obiettivi
@@ -276,13 +270,6 @@ function NavBar({ contactRef }) {
               href="/#reviews"
             >
               Recensioni
-            </a>
-            <a
-              className="text-sm font-medium text-gray-700 hover:text-terra transition-colors duration-200 px-1 py-1 border-b-2 border-transparent hover:border-terra"
-              href="/#contact"
-              onClick={handleContactClick}
-            >
-              Contatti
             </a>
             <a
               href="/iscriviti"
