@@ -552,11 +552,16 @@
 
 import { Link } from "react-router-dom";
 import { motion, MotionConfig } from "framer-motion";
+import {
+  BriefcaseIcon,
+  ComputerDesktopIcon,
+  UserGroupIcon,
+  WifiIcon,
+} from "@heroicons/react/24/outline";
 
 /**
- * Home Vicus — parla a tre pubblici: dipendenti, freelance, HR.
- * Palette: terra (colore principale) + neutral. Nessun territorio nominato
- * prima dei Patti, nessun numero di posti, nessun linguaggio da pacchetto.
+ * Home Vicus — stile originale del sito (titoli bold, bottoni a pillola,
+ * card con ombra e bordo laterale, fasce piene), palette unica: terra + gray.
  */
 
 // Foto d'atmosfera (Unsplash). Alt generici: non indicano dove siamo.
@@ -581,18 +586,21 @@ const IMG = {
 
 const PUBBLICI = [
   {
+    Icona: BriefcaseIcon,
     chi: "Se lavori in un'azienda",
     titolo: "Porta il tuo team fuori dallo schermo",
     testo:
       "Colleghi che vedi solo in call, finalmente nella stessa piazza. Qualche giorno di lavoro vero, in un posto che vi costringe a rallentare e a parlarvi.",
   },
   {
+    Icona: ComputerDesktopIcon,
     chi: "Se sei freelance",
     titolo: "Parti con un piccolo gruppo",
     testo:
       "Lavori da solo tutto l'anno. Qui trovi altri professionisti, una connessione verificata e un borgo che ti accoglie come residente, non come turista.",
   },
   {
+    Icona: UserGroupIcon,
     chi: "Se ti occupi di persone e HR",
     titolo: "Un ritrovo di team co-progettato",
     testo:
@@ -659,124 +667,180 @@ const TESTIMONIANZE = [
 ];
 
 // ─── Stili condivisi ──────────────────────────────────────────────────────────
-const kicker =
-  "text-[11px] font-semibold uppercase tracking-[0.14em] text-terra";
-const h2 =
-  "text-[26px] font-normal leading-snug tracking-tight text-neutral-900 sm:text-[34px]";
-const ctaPieno =
-  "inline-flex min-h-13 items-center justify-center rounded-lg bg-terra px-7 text-[16px] font-medium text-white transition hover:brightness-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-terra focus-visible:ring-offset-2 active:scale-[0.99]";
-const ctaVuoto =
-  "inline-flex min-h-13 items-center justify-center rounded-lg border border-neutral-300 px-7 text-[16px] text-neutral-700 transition-colors hover:border-terra hover:text-terra focus:outline-none focus-visible:ring-2 focus-visible:ring-terra focus-visible:ring-offset-2";
+const kicker = "text-xs font-semibold uppercase tracking-[0.14em] text-terra";
+const h2 = "text-3xl md:text-4xl font-bold tracking-tight text-gray-900";
+const focusRing =
+  "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
+const btnTerra = `inline-flex items-center justify-center gap-2 rounded-full bg-terra px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-terra/25 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-terra/30 hover:brightness-95 ${focusRing} focus-visible:ring-terra`;
+const btnBordo = `inline-flex items-center justify-center rounded-full border-2 border-gray-200 bg-white px-8 py-[14px] text-lg font-semibold text-gray-800 transition duration-300 hover:border-terra hover:text-terra ${focusRing} focus-visible:ring-terra`;
+const btnBianco = `inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white px-8 py-4 text-base font-bold text-terra sm:px-10 sm:text-lg shadow-lg transition duration-300 hover:-translate-y-0.5 hover:shadow-xl ${focusRing} focus-visible:ring-white focus-visible:ring-offset-terra`;
 
 // Comparsa allo scroll. Con "riduci movimento" attivo, MotionConfig la annulla.
-function Reveal({ children, className, delay = 0 }) {
+function Reveal({ children, className, delay = 0, from = "bottom" }) {
+  const offset = { bottom: { y: 40 }, left: { x: -40 }, right: { x: 40 } }[
+    from
+  ];
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, ...offset }}
+      whileInView={{ opacity: 1, x: 0, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>
   );
 }
 
+// Fascia piena in terra con alone morbido (sostituisce il blob giallo).
+function FasciaTerra({ children }) {
+  return (
+    <section className="relative isolate overflow-hidden bg-terra px-6 py-20 text-white md:py-28">
+      <div
+        aria-hidden="true"
+        className="absolute -left-24 -top-24 -z-10 h-80 w-80 rounded-full bg-white/15 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-32 -right-16 -z-10 h-96 w-96 rounded-full bg-black/15 blur-3xl"
+      />
+      <div className="mx-auto max-w-4xl text-center">{children}</div>
+    </section>
+  );
+}
+
 function Home() {
   return (
     <MotionConfig reducedMotion="user">
-      <main className="bg-white">
+      <main className="overflow-x-clip bg-white">
         {/* ── Hero ─────────────────────────────────────────────────────── */}
-        <section className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-20 pt-28 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:pt-36">
-          <div>
-            <p className={kicker}>Lavoro e borghi</p>
-            <h1 className="mt-4 text-[34px] font-normal leading-[1.1] tracking-tight text-neutral-900 sm:text-[48px]">
-              Lavora da un borgo. Lascia qualcosa al borgo.
-            </h1>
-            <p className="mt-6 max-w-md text-[17px] leading-relaxed text-neutral-500">
-              Porta il laptop, assapora la tradizione, vivi la storia. Per chi
-              lavora da remoto, per chi è freelance e per i team che vogliono
-              ritrovarsi davvero.
-            </p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Link to="/iscriviti" className={ctaPieno}>
-                Iscriviti alla waitlist
-              </Link>
-              <a href="#how-it-works" className={ctaVuoto}>
-                Come funziona
-              </a>
-            </div>
-          </div>
+        <section className="mx-auto max-w-6xl px-4 pb-16 pt-28 md:pb-24 md:pt-32">
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <p className={kicker}>Lavoro e borghi</p>
+              <h1 className="mt-4 text-4xl font-bold leading-[1.1] tracking-tight text-gray-900 md:text-5xl xl:text-[3.5rem]">
+                <span className="block">Lavora da un borgo.</span>
+                <span className="block text-terra">
+                  Lascia qualcosa al borgo.
+                </span>
+              </h1>
+              <p className="mt-6 text-lg font-bold text-gray-900">
+                Porta il laptop, assapora la tradizione, vivi la storia.
+              </p>
+              <p className="mt-3 max-w-md text-lg leading-relaxed text-gray-600">
+                Per chi lavora da remoto, per chi è freelance e per i team che
+                vogliono ritrovarsi davvero.
+              </p>
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <Link to="/iscriviti" className={btnTerra}>
+                  Iscriviti alla waitlist <span aria-hidden="true">→</span>
+                </Link>
+                <a href="#how-it-works" className={btnBordo}>
+                  Come funziona
+                </a>
+              </div>
+            </motion.div>
 
-          <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-neutral-100 sm:aspect-[4/3] lg:aspect-[4/5]">
-            <img
-              src={IMG.hero.src}
-              alt={IMG.hero.alt}
-              width="1400"
-              height="1750"
-              fetchPriority="high"
-              className="h-full w-full object-cover"
-            />
+            <motion.div
+              className="relative"
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.15,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              <div className="h-80 overflow-hidden rounded-2xl bg-gray-100 shadow-2xl md:h-96 lg:h-[32rem]">
+                <img
+                  src={IMG.hero.src}
+                  alt={IMG.hero.alt}
+                  width="1400"
+                  height="1750"
+                  fetchPriority="high"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              {/* Badge flottante */}
+              <div className="absolute -bottom-6 left-4 flex items-center gap-3 rounded-2xl border border-gray-100 bg-white px-5 py-4 shadow-xl sm:left-8">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-terra/10 text-terra">
+                  <WifiIcon className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <span className="text-sm leading-tight">
+                  <span className="block font-bold text-gray-900">
+                    Connessione verificata
+                  </span>
+                  <span className="text-gray-500">
+                    sul posto, prima di partire
+                  </span>
+                </span>
+              </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* ── Per chi è ────────────────────────────────────────────────── */}
-        <section className="border-t border-neutral-100 bg-neutral-50 px-5 py-20 sm:px-6 sm:py-28">
-          <div className="mx-auto max-w-6xl">
-            <Reveal className="max-w-2xl">
-              <p className={kicker}>Per chi è</p>
-              <h2 className={`mt-3 ${h2}`}>
-                Perché scegliere i piccoli comuni italiani?
-              </h2>
-              <p className="mt-4 text-[16px] leading-relaxed text-neutral-500">
-                Immagina di aprire il laptop con vista sulle colline, di fare
-                una pausa caffè in una piazzetta con i tuoi colleghi, di
-                chiudere la giornata con una cena tutti insieme.
-              </p>
-            </Reveal>
+        {/* ── Perché i piccoli comuni + per chi è ──────────────────────── */}
+        <section className="px-4 py-12 md:py-20">
+          <Reveal className="mx-auto max-w-6xl rounded-2xl border border-gray-100 bg-white p-6 shadow-xl sm:p-8 md:p-12">
+            <p className={kicker}>Per chi è</p>
+            <h2 className={`mt-3 ${h2}`}>
+              Perché scegliere i piccoli comuni italiani?
+            </h2>
+            <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-700">
+              Immagina di aprire il laptop con vista sulle colline, di fare una
+              pausa caffè in una piazzetta con i tuoi colleghi, di chiudere la
+              giornata con una cena tutti insieme.
+            </p>
 
-            <div className="mt-12 grid gap-5 md:grid-cols-3">
-              {PUBBLICI.map((p, i) => (
-                <Reveal
-                  key={p.chi}
-                  delay={i * 0.08}
-                  className="flex flex-col rounded-2xl border border-neutral-200 bg-white p-7"
+            <div className="mt-10 grid gap-5 rounded-2xl sm:bg-terra/5 sm:p-5 md:grid-cols-3 md:p-6">
+              {PUBBLICI.map(({ Icona, chi, titolo, testo }) => (
+                <div
+                  key={chi}
+                  className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-terra/10"
                 >
-                  <p className="text-[13px] font-medium text-terra">{p.chi}</p>
-                  <h3 className="mt-3 text-[20px] font-medium leading-snug text-neutral-900">
-                    {p.titolo}
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-terra text-white shadow-md shadow-terra/25">
+                    <Icona className="h-6 w-6" aria-hidden="true" />
+                  </span>
+                  <p className="mt-5 text-sm font-semibold text-terra">{chi}</p>
+                  <h3 className="mt-1 text-xl font-bold leading-snug text-gray-900">
+                    {titolo}
                   </h3>
-                  <p className="mt-3 text-[15px] leading-relaxed text-neutral-500">
-                    {p.testo}
-                  </p>
-                </Reveal>
+                  <p className="mt-3 leading-relaxed text-gray-600">{testo}</p>
+                </div>
               ))}
             </div>
-          </div>
+          </Reveal>
         </section>
 
         {/* ── Non è solo un viaggio ────────────────────────────────────── */}
-        <section className="px-5 py-20 sm:px-6 sm:py-28">
+        <section className="bg-gray-50 px-4 py-16 md:py-24">
           <div className="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2">
-            <Reveal className="order-2 md:order-1">
+            <Reveal from="left" className="order-2 md:order-1">
               <h2 className={h2}>Non è solo un viaggio.</h2>
-              <ul className="mt-10 space-y-8">
+              <div className="mt-8 space-y-5">
                 {VALORI.map((v) => (
-                  <li key={v.titolo} className="border-l-2 border-terra pl-5">
-                    <h3 className="text-[18px] font-medium text-neutral-900">
+                  <div
+                    key={v.titolo}
+                    className="rounded-xl border-l-4 border-terra bg-white p-6 shadow-sm transition-shadow duration-300 hover:shadow-md"
+                  >
+                    <h3 className="text-xl font-bold text-gray-900">
                       {v.titolo}
                     </h3>
-                    <p className="mt-2 text-[15px] leading-relaxed text-neutral-500">
+                    <p className="mt-2 leading-relaxed text-gray-700">
                       {v.testo}
                     </p>
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </Reveal>
 
-            <Reveal className="order-1 md:order-2">
-              <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-neutral-100">
+            <Reveal from="right" className="order-1 md:order-2">
+              <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-gray-200 shadow-xl md:aspect-[4/5]">
                 <img
                   src={IMG.lavoro.src}
                   alt={IMG.lavoro.alt}
@@ -791,123 +855,132 @@ function Home() {
         </section>
 
         {/* ── Come funziona ────────────────────────────────────────────── */}
-        <section
-          id="how-it-works"
-          className="scroll-mt-24 border-t border-neutral-100 bg-neutral-50 px-5 py-20 sm:px-6 sm:py-28"
-        >
+        <section id="how-it-works" className="scroll-mt-24 px-4 py-16 md:py-24">
           <div className="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2">
-            <Reveal>
-              <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-neutral-100">
+            <Reveal from="left">
+              <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-gray-100 shadow-xl md:aspect-[4/5]">
                 <img
                   src={IMG.borgo.src}
                   alt={IMG.borgo.alt}
                   width="1200"
-                  height="900"
+                  height="1500"
                   loading="lazy"
                   className="h-full w-full object-cover"
                 />
               </div>
             </Reveal>
 
-            <Reveal>
+            <Reveal from="right">
               <p className={kicker}>Come funziona</p>
               <h2 className={`mt-3 ${h2}`}>
                 Niente carrello. Una conversazione.
               </h2>
-              <p className="mt-4 text-[16px] leading-relaxed text-neutral-500">
+              <p className="mt-5 text-lg leading-relaxed text-gray-700">
                 Non vendiamo pacchetti da prenotare in tre clic. Ogni partenza
                 la costruiamo insieme, con le persone che vivono nel borgo.
               </p>
 
-              <ol className="mt-10 space-y-7">
+              <ol className="mt-8 space-y-4 rounded-xl border-l-4 border-terra bg-terra/5 p-6">
                 {PASSI.map((p, i) => (
-                  <li key={p.titolo} className="flex gap-5">
+                  <li key={p.titolo} className="flex gap-4">
                     <span
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-terra text-[14px] font-medium text-terra"
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-terra text-sm font-bold text-white"
                       aria-hidden="true"
                     >
                       {i + 1}
                     </span>
                     <div>
-                      <h3 className="text-[17px] font-medium text-neutral-900">
-                        {p.titolo}
-                      </h3>
-                      <p className="mt-1 text-[15px] leading-relaxed text-neutral-500">
-                        {p.testo}
-                      </p>
+                      <h3 className="font-bold text-gray-900">{p.titolo}</h3>
+                      <p className="mt-0.5 text-gray-700">{p.testo}</p>
                     </div>
                   </li>
                 ))}
               </ol>
 
-              <Link to="/iscriviti" className={`mt-10 ${ctaPieno}`}>
-                Iscriviti alla waitlist
+              <Link
+                to="/iscriviti"
+                className={`mt-8 w-full sm:w-auto ${btnTerra}`}
+              >
+                Iscriviti alla waitlist <span aria-hidden="true">→</span>
               </Link>
             </Reveal>
           </div>
         </section>
 
-        {/* ── Fascia paesaggio + impatto ───────────────────────────────── */}
-        <section className="relative isolate overflow-hidden">
+        {/* ── Fascia impatto ───────────────────────────────────────────── */}
+        <FasciaTerra>
+          <Reveal>
+            <h2 className="text-3xl font-extrabold leading-tight tracking-tight md:text-5xl">
+              Ogni giornata di lavoro in un borgo è spesa che resta nel borgo.
+            </h2>
+            <p className="mt-6 text-xl text-white/85">
+              Alloggi, pasti ed esperienze da persone del posto. E un Rendiconto
+              ogni anno.
+            </p>
+            <Link to="/goals" className={`mt-10 ${btnBianco}`}>
+              Cosa misuriamo, e come <span aria-hidden="true">→</span>
+            </Link>
+          </Reveal>
+        </FasciaTerra>
+
+        {/* ── Immagine a tutta larghezza ───────────────────────────────── */}
+        <div className="h-80 overflow-hidden bg-gray-200 md:h-96 lg:h-[32rem]">
           <img
             src={IMG.paesaggio.src}
-            alt=""
+            alt={IMG.paesaggio.alt}
             width="2000"
             height="1000"
             loading="lazy"
-            className="absolute inset-0 -z-10 h-full w-full object-cover"
+            className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 -z-10 bg-neutral-900/55" />
-          <Reveal className="mx-auto max-w-3xl px-5 py-28 text-center sm:px-6 sm:py-36">
-            <h2 className="text-[26px] font-normal leading-snug tracking-tight text-white sm:text-[36px]">
-              Ogni giornata di lavoro in un borgo è spesa che resta nel borgo.
-            </h2>
-            <Link
-              to="/goals"
-              className="mt-8 inline-flex items-center gap-2 text-[16px] text-white underline decoration-white/40 underline-offset-4 transition-colors hover:decoration-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900"
-            >
-              Cosa misuriamo, e come →
-            </Link>
-          </Reveal>
-        </section>
+        </div>
 
         {/* ── Testimonianze ────────────────────────────────────────────── */}
         <section
           id="reviews"
-          className="scroll-mt-24 px-5 py-20 sm:px-6 sm:py-28"
+          className="scroll-mt-24 bg-gray-50 px-6 py-20 md:py-28"
         >
-          <div className="mx-auto max-w-6xl">
-            <Reveal className="max-w-2xl">
+          <div className="mx-auto max-w-7xl">
+            <Reveal className="mx-auto max-w-2xl text-center">
               <p className={kicker}>In anteprima</p>
               <h2 className={`mt-3 ${h2}`}>
                 Le persone che non vedono l'ora di partire
               </h2>
-              <p className="mt-4 text-[16px] leading-relaxed text-neutral-500">
+              <p className="mt-4 text-lg text-gray-600">
                 Hanno provato la piattaforma prima dell'apertura. Ecco cosa ci
                 hanno scritto.
               </p>
             </Reveal>
 
-            <div className="mt-12 grid gap-5 lg:grid-cols-3">
+            <div className="mt-14 grid gap-8 lg:grid-cols-3">
               {TESTIMONIANZE.map((t, i) => (
-                <Reveal key={t.name} delay={i * 0.08}>
-                  <figure className="flex h-full flex-col rounded-2xl border border-neutral-200 bg-white p-7">
-                    <blockquote className="flex-1 text-[15px] leading-relaxed text-neutral-600">
-                      “{t.text}”
+                <Reveal key={t.name} delay={i * 0.1}>
+                  <figure className="flex h-full flex-col rounded-2xl border-t-4 border-terra bg-white p-8 shadow-md transition-shadow duration-300 hover:shadow-lg">
+                    <span
+                      aria-hidden="true"
+                      className="block h-10 text-center font-serif text-7xl leading-none text-terra/30"
+                    >
+                      “
+                    </span>
+                    <blockquote className="mt-2 flex-1 text-center italic leading-relaxed text-gray-700">
+                      {t.text}
                     </blockquote>
-                    <figcaption className="mt-7 flex items-center gap-4 border-t border-neutral-100 pt-5">
+                    <figcaption className="mt-8 flex items-center justify-center gap-4">
                       <span
-                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-terra/10 text-[15px] font-medium text-terra"
+                        className="flex h-12 w-12 items-center justify-center rounded-full bg-terra text-lg font-bold text-white"
                         aria-hidden="true"
                       >
                         {t.name[0]}
                       </span>
                       <span>
-                        <span className="block text-[15px] font-medium text-neutral-900">
+                        <span className="block font-semibold text-gray-900">
                           {t.name}
                         </span>
-                        <span className="block text-[13px] text-neutral-500">
-                          {t.job} · {t.location}
+                        <span className="block text-sm font-medium text-terra">
+                          {t.job}
+                        </span>
+                        <span className="block text-xs text-gray-500">
+                          {t.location}
                         </span>
                       </span>
                     </figcaption>
@@ -919,23 +992,23 @@ function Home() {
         </section>
 
         {/* ── CTA finale ───────────────────────────────────────────────── */}
-        <section className="px-5 pb-24 sm:px-6">
-          <Reveal className="mx-auto max-w-6xl rounded-2xl bg-terra px-6 py-16 text-center sm:px-12 sm:py-20">
-            <h2 className="text-[26px] font-normal leading-snug tracking-tight text-white sm:text-[36px]">
+        <FasciaTerra>
+          <Reveal>
+            <h2 className="text-4xl font-extrabold leading-tight tracking-tight md:text-6xl">
               Il tuo ufficio con vista ti sta aspettando
             </h2>
-            <p className="mx-auto mt-4 max-w-md text-[16px] leading-relaxed text-white/80">
+            <p className="mt-6 text-xl text-white/85">
               Ti scriviamo quando apriamo le prime date. Chi è in lista viene
               avvisato per primo.
             </p>
             <Link
               to="/iscriviti"
-              className="mt-9 inline-flex min-h-13 w-full items-center justify-center rounded-lg bg-white px-7 text-[16px] font-medium text-terra transition-colors hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-terra sm:w-auto"
+              className={`mt-10 w-full sm:w-auto ${btnBianco}`}
             >
-              Iscriviti alla waitlist
+              Iscriviti alla waitlist <span aria-hidden="true">→</span>
             </Link>
           </Reveal>
-        </section>
+        </FasciaTerra>
       </main>
     </MotionConfig>
   );
