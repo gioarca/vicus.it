@@ -722,15 +722,15 @@ function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
-              <p className={kicker}>Lavoro e borghi</p>
-              <h1 className="mt-4 text-4xl font-bold leading-[1.1] tracking-tight text-gray-900 md:text-5xl xl:text-[3.5rem]">
+              <h1 className="mt-4 text-4xl font-bold leading-[1.1] tracking-tight text-balance text-gray-900 md:text-5xl xl:text-[3.5rem]">
                 <span className="block">Lavora da un borgo.</span>
                 <span className="block text-terra">
-                  Lascia qualcosa al borgo.
+                  Vivilo come chi ci abita.
                 </span>
               </h1>
-              <p className="mt-6 text-lg font-bold text-gray-900">
-                Porta il laptop, assapora la tradizione, vivi la storia.
+              <p className="mt-6 max-w-md text-lg font-semibold text-gray-800">
+                Porta il laptop. Al resto pensano la piazza, la tavola e le
+                persone del posto.
               </p>
               <p className="mt-3 max-w-md text-lg leading-relaxed text-gray-600">
                 Per chi lavora da remoto, per chi è freelance e per i team che

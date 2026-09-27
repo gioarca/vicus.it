@@ -1,261 +1,178 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { motion, MotionConfig } from "framer-motion";
 
 /**
- * Pagina Obiettivi — palette del sito: neutral + rosso (red-600).
+ * Pagina Obiettivi — stesso stile della home: titoli bold, card con ombra,
+ * bottoni a pillola, palette terra + gray.
  *
- * I "risultati" sono gli indicatori del Rendiconto di Impatto Territoriale.
- * Finché non esiste un Rendiconto pubblicato, `valore` resta null e la card
- * mostra "In arrivo": NON inserire stime o obiettivi come se fossero risultati.
- * Quando esce il primo Rendiconto, basta compilare `valore` e `nota`.
+ * Icone ufficiali ONU (versione italiana, UNRIC). Consiglio: scaricarle in
+ * /public/sdg/ e cambiare gli src, così non dipendi da un server esterno.
  */
 
-// ─── Obiettivi (SDG di riferimento) ───────────────────────────────────────────
+const SDG_BASE =
+  "https://e4k4c4x9.delivery.rocketcdn.me/it/wp-content/uploads/sites/3/2019/03";
+
 const OBIETTIVI = [
   {
     sdg: 8,
+    immagine: `${SDG_BASE}/SDG-icon-IT-RGB-08.jpg`,
     nome: "Lavoro dignitoso e crescita economica",
-    titolo: "La spesa resta nel borgo",
+    titolo: "Lavoro che resta nel borgo",
     testo:
-      "Alloggi, pasti, trasporti ed esperienze li forniscono persone e imprese del territorio. Le loro fatture sono intestate direttamente all'azienda cliente: il lavoro viene pagato a chi lo fa, senza intermediari che trattengono una parte.",
+      "Chi ospita, chi cucina, chi accompagna: ogni ritiro dà lavoro a chi nel borgo ci vive. Vogliamo che quello che un team porta con sé resti lì, anche dopo la partenza.",
   },
   {
     sdg: 9,
+    immagine: `${SDG_BASE}/SDG-icon-IT-RGB-09.jpg`,
     nome: "Imprese, innovazione e infrastrutture",
-    titolo: "Un borgo dove si può lavorare davvero",
+    titolo: "Borghi dove si lavora davvero",
     testo:
-      "Prima di proporre un borgo ne verifichiamo sul posto connessione e spazi di lavoro. Un team che lavora bene lì dimostra che quel territorio è una scelta praticabile, non un ripiego romantico.",
+      "Una buona connessione, un tavolo luminoso, un caffè in piazza. Un borgo può essere un posto dove lavorare bene, non solo dove passare le vacanze.",
   },
   {
     sdg: 10,
+    immagine: `${SDG_BASE}/SDG-icon-IT-RGB-10.jpg`,
     nome: "Ridurre le disuguaglianze",
-    titolo: "Restituzione documentata, non beneficenza",
+    titolo: "Meno distanza tra città e paesi",
     testo:
-      "Con ogni Comune firmiamo un patto con impegni misurabili. Ogni anno rendiamo conto di cosa abbiamo portato al territorio, in un documento che il Comune riceve e può pubblicare.",
+      "Le città si riempiono, i paesi si svuotano. Portare persone, idee e lavoro nei piccoli comuni è il nostro modo di accorciare questa distanza.",
   },
 ];
 
-// ─── Indicatori del Rendiconto (i risultati misurabili) ───────────────────────
-const INDICATORI = [
-  {
-    etichetta: "Giornate-persona di presenza",
-    descrizione:
-      "Quante giornate i team ospitati hanno effettivamente vissuto nel borgo.",
-    valore: null,
-    nota: "",
-  },
-  {
-    etichetta: "Spesa verso fornitori locali",
-    descrizione:
-      "Quota del budget di ogni retreat fatturata da imprese del territorio.",
-    valore: null,
-    nota: "",
-  },
-  {
-    etichetta: "Fornitori locali coinvolti",
-    descrizione:
-      "Quante imprese del borgo hanno lavorato con noi, e di che tipo.",
-    valore: null,
-    nota: "",
-  },
-  {
-    etichetta: "Ore con la comunità",
-    descrizione: "Laboratori, visite e incontri con artigiani e residenti.",
-    valore: null,
-    nota: "",
-  },
-  {
-    etichetta: "Contributo al progetto culturale",
-    descrizione:
-      "Quanto è andato al progetto culturale scelto ogni anno con il Comune.",
-    valore: null,
-    nota: "",
-  },
-  {
-    etichetta: "Valutazione degli ospiti",
-    descrizione:
-      "Come i partecipanti giudicano l'esperienza, a retreat concluso.",
-    valore: null,
-    nota: "",
-  },
-];
+const kicker = "text-xs font-semibold uppercase tracking-[0.14em] text-terra";
 
-// ─── Impegni verificabili ─────────────────────────────────────────────────────
-const IMPEGNI = [
-  {
-    titolo: "Un Rendiconto ogni anno",
-    testo:
-      "Entro il 31 marzo ogni Comune partner riceve il Rendiconto dell'anno precedente, con i dati di ogni indicatore.",
-  },
-  {
-    titolo: "Promesso contro realizzato",
-    testo:
-      "Per ogni impegno mostriamo quanto avevamo promesso, quanto abbiamo fatto e lo scostamento. Anche quando siamo sotto.",
-  },
-  {
-    titolo: "Nessuna commissione sui fornitori",
-    testo:
-      "Non prendiamo percentuali da chi lavora nel borgo. Il nostro compenso è la consulenza che paga l'azienda, e basta.",
-  },
-  {
-    titolo: "Solo operatori del territorio",
-    testo:
-      "Le esperienze sono proposte da persone che vivono e lavorano nel borgo, non da operatori esterni.",
-  },
-];
+function Reveal({ children, className, delay = 0 }) {
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
-const kicker =
-  "text-[11px] font-semibold uppercase tracking-[0.14em] text-red-600";
+// Icona ONU con ripiego: se l'immagine non carica, mostra il numero.
+function IconaSdg({ sdg, src, nome }) {
+  const [errore, setErrore] = useState(false);
 
-function Goals() {
-  const risultatiDisponibili = INDICATORI.some((i) => i.valore !== null);
+  if (errore) {
+    return (
+      <div className="flex h-full w-full flex-col items-center justify-center bg-terra/10 text-center">
+        <span className="flex h-16 w-16 items-center justify-center rounded-full bg-terra text-2xl font-bold text-white">
+          {sdg}
+        </span>
+        <span className="mt-3 px-4 text-sm font-semibold text-gray-700">
+          {nome}
+        </span>
+      </div>
+    );
+  }
 
   return (
-    <main className="bg-white px-5 pb-24 pt-32 sm:px-6 sm:pt-40">
-      <title>Obiettivi — Vicus</title>
+    <img
+      src={src}
+      alt={`Obiettivo ONU ${sdg}: ${nome}`}
+      width="400"
+      height="400"
+      loading="lazy"
+      onError={() => setErrore(true)}
+      className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
+    />
+  );
+}
 
-      <div className="mx-auto max-w-5xl">
-        {/* ── Intestazione ─────────────────────────────────────────────── */}
-        <header className="max-w-2xl">
-          <p className={kicker}>Obiettivi</p>
-          <h1 className="mt-3 text-[30px] font-normal leading-tight tracking-tight text-neutral-900 sm:text-[42px]">
-            Cosa vogliamo cambiare, e come lo misuriamo
-          </h1>
-          <p className="mt-5 text-[16px] leading-relaxed text-neutral-500">
-            Portare un team a lavorare in un borgo ha senso solo se il borgo ci
-            guadagna qualcosa di concreto. Per questo ogni obiettivo ha un
-            indicatore, e ogni indicatore finisce in un documento pubblico.
-          </p>
-        </header>
+function Goals() {
+  return (
+    <MotionConfig reducedMotion="user">
+      <main className="overflow-x-clip bg-white">
+        <title>Obiettivi</title>
 
-        {/* ── Tre obiettivi ────────────────────────────────────────────── */}
-        <section aria-labelledby="obiettivi-titolo" className="mt-16 sm:mt-20">
-          <h2 id="obiettivi-titolo" className="sr-only">
-            I nostri obiettivi
-          </h2>
-          <ol className="grid gap-5 md:grid-cols-3">
-            {OBIETTIVI.map((o) => (
-              <li
-                key={o.sdg}
-                className="flex flex-col rounded-2xl border border-neutral-200 bg-white p-6 transition-colors hover:border-neutral-300"
-              >
-                <div className="flex items-center gap-3">
-                  <span
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-red-600 text-[15px] font-semibold text-white"
-                    aria-hidden="true"
-                  >
-                    {o.sdg}
-                  </span>
-                  <span className="text-[12px] leading-snug text-neutral-400">
-                    Obiettivo ONU {o.sdg}
-                    <br />
-                    {o.nome}
-                  </span>
-                </div>
-                <h3 className="mt-6 text-[19px] font-medium leading-snug text-neutral-900">
-                  {o.titolo}
-                </h3>
-                <p className="mt-3 text-[15px] leading-relaxed text-neutral-500">
-                  {o.testo}
-                </p>
-              </li>
-            ))}
-          </ol>
+        <section className="bg-gray-50 px-4 pb-20 pt-32 md:pb-28 md:pt-40">
+          <div className="mx-auto max-w-6xl">
+            {/* ── Intestazione ───────────────────────────────────────── */}
+            <Reveal className="mx-auto max-w-2xl text-center">
+              <p className={kicker}>Obiettivi</p>
+              <h1 className="mt-3 text-4xl font-bold tracking-tight text-gray-900 md:text-5xl">
+                I nostri obiettivi
+              </h1>
+              <div className="mx-auto mt-6 h-1 w-20 rounded-full bg-terra" />
+              <p className="mt-6 text-lg leading-relaxed text-gray-600">
+                Vicus nasce per riportare lavoro e vita nei piccoli borghi.
+                Questi sono gli obiettivi dell'Agenda 2030 dell'ONU a cui
+                vogliamo dare il nostro contributo, un borgo alla volta.
+              </p>
+            </Reveal>
+
+            {/* ── Card obiettivi ─────────────────────────────────────── */}
+            <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {OBIETTIVI.map((o, i) => (
+                <Reveal key={o.sdg} delay={i * 0.12}>
+                  <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-lg transition duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                    <div className="p-6 pb-0">
+                      <div className="aspect-square overflow-hidden rounded-xl bg-gray-50">
+                        <IconaSdg sdg={o.sdg} src={o.immagine} nome={o.nome} />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-1 gap-4 p-6">
+                      <div className="w-1.5 shrink-0 rounded-full bg-terra" />
+                      <div>
+                        <h2 className="text-xl font-bold leading-snug text-gray-900">
+                          {o.titolo}
+                        </h2>
+                        <p className="mt-2 leading-relaxed text-gray-600">
+                          {o.testo}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="h-1 origin-left scale-x-0 bg-terra transition-transform duration-500 group-hover:scale-x-100" />
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+
+            <Reveal className="mx-auto mt-16 max-w-xl text-center">
+              <p className="text-lg italic leading-relaxed text-gray-600">
+                Siamo all'inizio. I primi risultati li racconteremo qui, borgo
+                per borgo.
+              </p>
+            </Reveal>
+          </div>
         </section>
 
-        {/* ── Risultati misurabili ─────────────────────────────────────── */}
-        <section aria-labelledby="risultati-titolo" className="mt-24 sm:mt-28">
-          <div className="max-w-2xl">
-            <p className={kicker}>Risultati</p>
-            <h2
-              id="risultati-titolo"
-              className="mt-3 text-[24px] font-normal leading-snug tracking-tight text-neutral-900 sm:text-[30px]"
-            >
-              Sei numeri, verificabili, ogni anno
+        {/* ── CTA ────────────────────────────────────────────────────── */}
+        <section className="relative isolate overflow-hidden bg-terra px-6 py-20 text-center text-white md:py-24">
+          <div
+            aria-hidden="true"
+            className="absolute -left-24 -top-24 -z-10 h-80 w-80 rounded-full bg-white/15 blur-3xl"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute -bottom-32 -right-16 -z-10 h-96 w-96 rounded-full bg-black/15 blur-3xl"
+          />
+          <Reveal className="mx-auto max-w-3xl">
+            <h2 className="text-3xl font-extrabold leading-tight tracking-tight md:text-5xl">
+              Vuoi far parte del cambiamento?
             </h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-neutral-500">
-              {risultatiDisponibili
-                ? "I dati vengono dal Rendiconto di Impatto Territoriale che trasmettiamo a ogni Comune partner."
-                : "Sono gli indicatori del Rendiconto di Impatto Territoriale. Siamo all'inizio: pubblicheremo qui i valori reali appena esce il primo Rendiconto, senza stime né proiezioni."}
+            <p className="mt-5 text-xl text-white/85">
+              Ti scriviamo quando apriamo le prime date.
             </p>
-          </div>
-
-          <dl className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-200 sm:grid-cols-2 lg:grid-cols-3">
-            {INDICATORI.map((i) => (
-              <div key={i.etichetta} className="flex flex-col bg-white p-6">
-                <dt className="text-[14px] font-medium text-neutral-900">
-                  {i.etichetta}
-                </dt>
-                <dd className="order-first mb-4">
-                  {i.valore !== null ? (
-                    <span className="text-[34px] font-normal leading-none tracking-tight text-red-600">
-                      {i.valore}
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-2 rounded-full border border-dashed border-neutral-300 px-3 py-1 text-[12px] text-neutral-400">
-                      <span
-                        className="h-1.5 w-1.5 rounded-full bg-red-600"
-                        aria-hidden="true"
-                      />
-                      In arrivo col primo Rendiconto
-                    </span>
-                  )}
-                </dd>
-                <dd className="mt-2 text-[14px] leading-relaxed text-neutral-500">
-                  {i.descrizione}
-                </dd>
-                {i.nota && (
-                  <dd className="mt-3 text-[12px] text-neutral-400">
-                    {i.nota}
-                  </dd>
-                )}
-              </div>
-            ))}
-          </dl>
-        </section>
-
-        {/* ── Impegni ──────────────────────────────────────────────────── */}
-        <section aria-labelledby="impegni-titolo" className="mt-24 sm:mt-28">
-          <div className="max-w-2xl">
-            <p className={kicker}>Impegni</p>
-            <h2
-              id="impegni-titolo"
-              className="mt-3 text-[24px] font-normal leading-snug tracking-tight text-neutral-900 sm:text-[30px]"
+            <Link
+              to="/iscriviti"
+              className="mt-10 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white px-8 py-4 text-base font-bold text-terra shadow-lg transition duration-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-terra sm:px-10 sm:text-lg"
             >
-              Cosa puoi verificare da subito
-            </h2>
-          </div>
-
-          <ul className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2">
-            {IMPEGNI.map((imp) => (
-              <li key={imp.titolo} className="border-l-2 border-red-600 pl-5">
-                <h3 className="text-[16px] font-medium text-neutral-900">
-                  {imp.titolo}
-                </h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-neutral-500">
-                  {imp.testo}
-                </p>
-              </li>
-            ))}
-          </ul>
+              Iscriviti alla waitlist <span aria-hidden="true">→</span>
+            </Link>
+          </Reveal>
         </section>
-
-        {/* ── CTA ──────────────────────────────────────────────────────── */}
-        <section className="mt-24 rounded-2xl bg-neutral-900 px-6 py-12 text-center sm:mt-28 sm:px-12">
-          <h2 className="text-[22px] font-normal leading-snug tracking-tight text-white sm:text-[28px]">
-            Vuoi esserci quando apriamo le prime date?
-          </h2>
-          <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-neutral-400">
-            Chi è in lista viene avvisato per primo e sceglie per primo.
-          </p>
-          <Link
-            to="/iscriviti"
-            className="mt-8 inline-flex min-h-13 w-full items-center justify-center rounded-lg bg-red-600 px-6 text-[16px] font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 sm:w-auto sm:min-w-55"
-          >
-            Iscriviti alla waitlist
-          </Link>
-        </section>
-      </div>
-    </main>
+      </main>
+    </MotionConfig>
   );
 }
 
