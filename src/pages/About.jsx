@@ -531,7 +531,7 @@ export default function About() {
         </section>
 
         {/* ── Cos'è Vicus ──────────────────────────────────────────────── */}
-        <section className="px-4 py-16 sm:px-6 md:py-24">
+        {/* <section className="px-4 py-16 sm:px-6 md:py-24">
           <div className="mx-auto max-w-5xl">
             <Reveal className="mx-auto max-w-3xl text-center">
               <h2 className={h2}>Cos'è Vicus?</h2>
@@ -558,7 +558,7 @@ export default function About() {
               </div>
             </Reveal>
           </div>
-        </section>
+        </section> */}
 
         {/* ── Il paradosso italiano ────────────────────────────────────── */}
         <section className="bg-gray-50 px-4 py-16 sm:px-6 md:py-24">
